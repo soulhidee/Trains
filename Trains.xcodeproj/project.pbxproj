@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		86CF6F272EA4F67D00A47073 /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = 86CF6F262EA4F67D00A47073 /* OpenAPIRuntime */; };
 		86CF6F2A2EA4F6B800A47073 /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = 86CF6F292EA4F6B800A47073 /* OpenAPIURLSession */; };
+		86CF6F872EA50BB400A47073 /* SwiftKeychainWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = 86CF6F862EA50BB400A47073 /* SwiftKeychainWrapper */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -16,6 +17,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		86CF6F8A2EA50E3400A47073 /* API */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = API;
+			sourceTree = "<group>";
+		};
 		86F8E0872EA115EE0002B589 /* Trains */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Trains;
@@ -30,6 +36,7 @@
 			files = (
 				86CF6F2A2EA4F6B800A47073 /* OpenAPIURLSession in Frameworks */,
 				86CF6F272EA4F67D00A47073 /* OpenAPIRuntime in Frameworks */,
+				86CF6F872EA50BB400A47073 /* SwiftKeychainWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -39,6 +46,7 @@
 		86F8E07C2EA115EE0002B589 = {
 			isa = PBXGroup;
 			children = (
+				86CF6F8A2EA50E3400A47073 /* API */,
 				86F8E0872EA115EE0002B589 /* Trains */,
 				86F8E0862EA115EE0002B589 /* Products */,
 			);
@@ -69,12 +77,14 @@
 				86CF6F352EA4F78E00A47073 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
+				86CF6F8A2EA50E3400A47073 /* API */,
 				86F8E0872EA115EE0002B589 /* Trains */,
 			);
 			name = Trains;
 			packageProductDependencies = (
 				86CF6F262EA4F67D00A47073 /* OpenAPIRuntime */,
 				86CF6F292EA4F6B800A47073 /* OpenAPIURLSession */,
+				86CF6F862EA50BB400A47073 /* SwiftKeychainWrapper */,
 			);
 			productName = TravelSchedule;
 			productReference = 86F8E0852EA115EE0002B589 /* Trains.app */;
@@ -108,6 +118,7 @@
 				86CF6F252EA4F67D00A47073 /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
 				86CF6F282EA4F6B800A47073 /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
 				86CF6F2D2EA4F74C00A47073 /* XCRemoteSwiftPackageReference "swift-openapi-generator" */,
+				86CF6F852EA50BB400A47073 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 86F8E0862EA115EE0002B589 /* Products */;
@@ -149,6 +160,8 @@
 /* Begin XCBuildConfiguration section */
 		86F8E08E2EA115F10002B589 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 86F8E0872EA115EE0002B589 /* Trains */;
+			baseConfigurationReferenceRelativePath = Resources/Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -213,6 +226,8 @@
 		};
 		86F8E08F2EA115F10002B589 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 86F8E0872EA115EE0002B589 /* Trains */;
+			baseConfigurationReferenceRelativePath = Resources/Secrets.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -382,6 +397,14 @@
 				minimumVersion = 1.10.3;
 			};
 		};
+		86CF6F852EA50BB400A47073 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jrendel/SwiftKeychainWrapper";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -399,6 +422,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 86CF6F2D2EA4F74C00A47073 /* XCRemoteSwiftPackageReference "swift-openapi-generator" */;
 			productName = "plugin:OpenAPIGenerator";
+		};
+		86CF6F862EA50BB400A47073 /* SwiftKeychainWrapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 86CF6F852EA50BB400A47073 /* XCRemoteSwiftPackageReference "SwiftKeychainWrapper" */;
+			productName = SwiftKeychainWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
