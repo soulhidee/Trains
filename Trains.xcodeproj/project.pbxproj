@@ -17,11 +17,6 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		86CF6F8A2EA50E3400A47073 /* API */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = API;
-			sourceTree = "<group>";
-		};
 		86F8E0872EA115EE0002B589 /* Trains */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Trains;
@@ -46,7 +41,6 @@
 		86F8E07C2EA115EE0002B589 = {
 			isa = PBXGroup;
 			children = (
-				86CF6F8A2EA50E3400A47073 /* API */,
 				86F8E0872EA115EE0002B589 /* Trains */,
 				86F8E0862EA115EE0002B589 /* Products */,
 			);
@@ -77,7 +71,6 @@
 				86CF6F352EA4F78E00A47073 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				86CF6F8A2EA50E3400A47073 /* API */,
 				86F8E0872EA115EE0002B589 /* Trains */,
 			);
 			name = Trains;

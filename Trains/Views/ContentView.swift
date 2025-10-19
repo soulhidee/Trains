@@ -32,7 +32,7 @@ struct ContentView: View {
                 
                 let service = NearestStationsService(
                     client: client,
-                    apiKey: API.key
+                    apiKey: APIKeyManager.shared.getAPIKey()
                 )
                 
                 print("Fetching stations...")
