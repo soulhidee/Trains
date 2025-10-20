@@ -59,6 +59,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Stations'
+  /v3.0/copyright/:
+    get:
+      tags:
+        - getCopyright
+      summary: Получить данные о копирайте
+      description: Ответ содержит данные о Яндекс Расписаниях (баннер, URL, уведомительный текст)
+      operationId: getCopyright
+      parameters:
+        - name: apikey
+          in: query
+          description: API key
+          required: false
+          schema:
+            type: string
+        - name: format
+          in: query
+          description: Формат Ответа
+          required: false
+          schema:
+            type: string
+            enum: [json, xml]
+            default: json
+      responses:
+        "200":
+          description: "Успешный ответ"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Copyright'
+                
+            
+       
+  
 components:
   schemas:
     Stations:
@@ -115,3 +148,31 @@ components:
           type: string
         touch_url:
           type: string
+    Copyright:
+      type: object
+      properties:
+        logo_vm:
+          type: string
+          description: Вертикальный логотип на светлом фоне
+        logo_vd:
+          type: string
+          description: Вертикальный логотип на тёмном фоне
+        logo_hy:
+          type: string
+          description: Горизонтальный логотип на светлом фоне
+        logo_hd:
+          type: string
+          description: Горизонтальный логотип на тёмном фоне
+        logo_vy:
+          type: string
+          description: Вертикальный баннер на жёлтом фоне
+        logo_hm:
+          type: string
+          description: Горизонтальный монохромный баннер
+        url:
+          type: string
+          description: Ссылка на сайт Яндекс.Расписаний
+        text:
+          type: string
+          description: Текст уведомления о сервисе Яндекс.Расписания
+
