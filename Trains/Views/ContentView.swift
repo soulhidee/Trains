@@ -20,7 +20,8 @@ struct ContentView: View {
         .onAppear {
             // testFetchStations()
             // testFetchCopyright()
-             testFetchSchedule()
+            //  testFetchSchedule()
+            testFetchStationSchedule()
         }
     }
     
@@ -101,6 +102,33 @@ struct ContentView: View {
                 print("Successfully fetched schedule: \(schedule)")
             } catch {
                 print("Error fetching schedule: \(error)")
+            }
+        }
+    }
+    
+    func testFetchStationSchedule() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                
+                let service = StationScheduleService(
+                    client: client,
+                    apiKey: APIKeyManager.shared.getAPIKey()
+                )
+                
+                print("Fetching station schedule...")
+                
+                let schedule = try await service.getStationSchedule(
+                    station: "s9602494",
+                    date: "2025-10-24"
+                )
+                
+                print("Successfully fetched station schedule: \(schedule)")
+            } catch {
+                print("Error fetching station schedule: \(error)")
             }
         }
     }
