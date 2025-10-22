@@ -147,7 +147,7 @@ paths:
       tags:
         - Schedule
       summary: Расписание рейсов между станциями
-      operationId: getSchedualBetweenStations
+      operationId: getScheduleBetweenStations
       parameters:
         - name: apikey
           in: query

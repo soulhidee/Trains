@@ -19,7 +19,8 @@ struct ContentView: View {
         .padding()
         .onAppear {
             // testFetchStations()
-            testFetchCopyright()
+            // testFetchCopyright()
+             testFetchSchedule()
         }
     }
     
@@ -69,9 +70,37 @@ struct ContentView: View {
                 let copyright = try await service.getCopyright(format: "json")
                 
                 print("Successfully fetched copyright:\(copyright)")
-               
+                
             } catch {
                 print("Error fetching copyright: \(error)")
+            }
+        }
+    }
+    
+    func testFetchSchedule() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                
+                let service = ScheduleSearchService(
+                    client: client,
+                    apiKey: APIKeyManager.shared.getAPIKey()
+                )
+                
+                print("Fetching schedule...")
+                
+                let schedule = try await service.getScheduleBetweenStations(
+                    from: "c146",
+                    to: "c213",
+                    date: "2025-10-23"
+                )
+                
+                print("Successfully fetched schedule: \(schedule)")
+            } catch {
+                print("Error fetching schedule: \(error)")
             }
         }
     }
