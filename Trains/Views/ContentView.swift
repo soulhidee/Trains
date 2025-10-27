@@ -21,8 +21,9 @@ struct ContentView: View {
             // testFetchStations()
             // testFetchCopyright()
             //  testFetchSchedule()
-//            testFetchStationSchedule()
-            testFetchRouteStations()
+            //            testFetchStationSchedule()
+            //            testFetchRouteStations()
+            testFetchNearestCity()
         }
     }
     
@@ -162,6 +163,30 @@ struct ContentView: View {
         }
     }
     
+    func testFetchNearestCity() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                
+                let service = NearestSettlementService(
+                    client: client,
+                    apikey: APIKeyManager.shared.getAPIKey()
+                )
+                print("Fetching stations...")
+                let stations = try await service.getNearestCity(
+                    lat: 50.440046,
+                    lng: 40.4882367,
+                    distance: 50
+                )
+                print("Successfully fetched stations: \(stations)")
+            } catch {
+                print("Error fetching stations: \(error)")
+            }
+        }
+    }
 }
 
 #Preview {
