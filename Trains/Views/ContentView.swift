@@ -21,7 +21,8 @@ struct ContentView: View {
             // testFetchStations()
             // testFetchCopyright()
             //  testFetchSchedule()
-            testFetchStationSchedule()
+//            testFetchStationSchedule()
+            testFetchRouteStations()
         }
     }
     
@@ -132,6 +133,35 @@ struct ContentView: View {
             }
         }
     }
+    
+    func testFetchRouteStations() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                
+                let service = RouteStationsService(
+                    client: client,
+                    apiKey: APIKeyManager.shared.getAPIKey()
+                )
+                
+                print("Fetching route stations...")
+                
+                let routeStations = try await service.getRouteStations(
+                    uid: "021A_6_2",
+                    lang: "ru_RU",
+                    showSystems: "all"
+                )
+                
+                print("Successfully fetched route stations: \(routeStations)")
+            } catch {
+                print("Error fetching route stations: \(error)")
+            }
+        }
+    }
+    
 }
 
 #Preview {
