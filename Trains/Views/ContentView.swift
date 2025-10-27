@@ -23,7 +23,8 @@ struct ContentView: View {
             //  testFetchSchedule()
             //            testFetchStationSchedule()
             //            testFetchRouteStations()
-            testFetchNearestCity()
+//            testFetchNearestCity()
+            testFetchCarrierInfo()
         }
     }
     
@@ -184,6 +185,29 @@ struct ContentView: View {
                 print("Successfully fetched stations: \(stations)")
             } catch {
                 print("Error fetching stations: \(error)")
+            }
+        }
+    }
+    func testFetchCarrierInfo() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                
+                let service = CarrierService(
+                    client: client,
+                    apiKey: APIKeyManager.shared.getAPIKey()
+                )
+                
+                print("Fetching carrier info...")
+                
+                let carrier = try await service.getCarrierInfo(code: "680", system: "iata")
+                
+                print("Successfully fetched carrier: \(carrier)")
+            } catch {
+                print("Error fetching carrier: \(error)")
             }
         }
     }
