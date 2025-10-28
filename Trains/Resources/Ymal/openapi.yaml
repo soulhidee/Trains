@@ -489,7 +489,7 @@ paths:
         "200":
           description: Успешный ответ
           content:
-            application/json:
+            text/html:
               schema:
                 $ref: '#/components/schemas/AllStationsResponse'
 components:

@@ -17,6 +17,7 @@ protocol ScheduleSearchServiceProtocol {
     ) async throws -> ScheduleSearch
 }
 
+// MARK: - Service Implementation
 final class ScheduleSearchService: ScheduleSearchServiceProtocol {
     
     // MARK: - Private Properties

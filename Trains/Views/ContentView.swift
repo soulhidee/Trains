@@ -18,13 +18,14 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-            // testFetchStations()
-            // testFetchCopyright()
-            //  testFetchSchedule()
-            //            testFetchStationSchedule()
-            //            testFetchRouteStations()
+//            testFetchStations()
+//            testFetchCopyright()
+//            testFetchSchedule()
+//            testFetchStationSchedule()
+//            testFetchRouteStations()
 //            testFetchNearestCity()
-            testFetchCarrierInfo()
+//            testFetchCarrierInfo()
+            testFetchStationsList()
         }
     }
     
@@ -208,6 +209,26 @@ struct ContentView: View {
                 print("Successfully fetched carrier: \(carrier)")
             } catch {
                 print("Error fetching carrier: \(error)")
+            }
+        }
+    }
+    func testFetchStationsList() {
+        Task {
+            do {
+                let client = Client(
+                    serverURL: try Servers.Server1.url(),
+                    transport: URLSessionTransport()
+                )
+                let service = AllStationsService(
+                    client: client,
+                    apiKey: APIKeyManager.shared.getAPIKey()
+                )
+                print("Fetching allStations...")
+                let allStations = try await service.getAllStations(
+                )
+                print("Successfully fetched allStations")
+            } catch {
+                print("Error fetching allStations: \(error)")
             }
         }
     }
