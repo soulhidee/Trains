@@ -18,14 +18,14 @@ struct ContentView: View {
         }
         .padding()
         .onAppear {
-//            testFetchStations()
-//            testFetchCopyright()
-//            testFetchSchedule()
-//            testFetchStationSchedule()
-//            testFetchRouteStations()
-//            testFetchNearestCity()
-//            testFetchCarrierInfo()
-            testFetchStationsList()
+            testFetchStations() // РАБОТАЕТ
+            testFetchCopyright() // РАБОТАЕТ
+            testFetchSchedule() // РАБОТАЕТ
+            testFetchStationSchedule() // РАБОТАЕТ
+            testFetchRouteStations() // РАБОТАЕТ
+            testFetchNearestCity() // РАБОТАЕТ
+            testFetchCarrierInfo() // РАБОТАЕТ
+            testFetchStationsList() // РАБОТАЕТ
         }
     }
     
@@ -204,7 +204,7 @@ struct ContentView: View {
                 
                 print("Fetching carrier info...")
                 
-                let carrier = try await service.getCarrierInfo(code: "680", system: "iata")
+                let carrier = try await service.getCarrierInfo(code: "TK", system: "iata")
                 
                 print("Successfully fetched carrier: \(carrier)")
             } catch {
@@ -215,18 +215,45 @@ struct ContentView: View {
     func testFetchStationsList() {
         Task {
             do {
+                let configuration = URLSessionConfiguration.default
+                configuration.timeoutIntervalForRequest = 120
+                configuration.timeoutIntervalForResource = 300
+                
+                let urlSession = URLSession(configuration: configuration)
+                
                 let client = Client(
                     serverURL: try Servers.Server1.url(),
-                    transport: URLSessionTransport()
+                    transport: URLSessionTransport(configuration: .init(session: urlSession))
                 )
+                
                 let service = AllStationsService(
                     client: client,
                     apiKey: APIKeyManager.shared.getAPIKey()
                 )
-                print("Fetching allStations...")
-                let allStations = try await service.getAllStations(
-                )
-                print("Successfully fetched allStations")
+                
+                print("Fetching allStations... (this may take a while)")
+                
+                let allStations = try await service.getAllStations()
+                
+                print("Successfully fetched allStations!")
+                print("Total countries: \(allStations.countries?.count ?? 0)")
+                
+                var totalStations = 0
+                if let countries = allStations.countries {
+                    for country in countries {
+                        if let regions = country.regions {
+                            for region in regions {
+                                if let settlements = region.settlements {
+                                    for settlement in settlements {
+                                        totalStations += settlement.stations?.count ?? 0
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                print("Total stations: \(totalStations)")
+                
             } catch {
                 print("Error fetching allStations: \(error)")
             }

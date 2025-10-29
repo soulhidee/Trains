@@ -893,10 +893,8 @@ components:
       properties:
         arrival:
           type: string
-          format: date-time
         departure:
           type: string
-          format: date-time
         stop_time:
           type: integer
           description: Продолжительность остановки в секундах
@@ -939,10 +937,8 @@ components:
     CarrierResponse:
       type: object
       properties:
-        carriers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Carrier'
+        carrier:
+          $ref: '#/components/schemas/Carrier'
     AllStationsResponse:
       type: object
       properties:
