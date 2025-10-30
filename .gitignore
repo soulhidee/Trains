@@ -102,3 +102,5 @@ iOSInjectionProject/
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode# R.swift generated file
 *.generated.swift
 *.generated.swift
+Secrets.xcconfig
+Secrets.swift
