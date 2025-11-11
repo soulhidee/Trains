@@ -1,14 +1,9 @@
-//
-//  TabBarView.swift
-//  Trains
-//
-//  Created by Даниил on 11.11.2025.
-//
-
 import SwiftUI
 
 struct TabBarView: View {
     @State private var selectedTab = 0
+    
+    
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -26,8 +21,15 @@ struct TabBarView: View {
                 .tag(1)
         }
         .tint(.ypBlack)
+        .safeAreaInset(edge: .bottom) {
+            Rectangle()
+                .frame(height: 1 / UIScreen.main.scale)
+                .foregroundColor(.ypBlack.opacity(0.3))
+                .padding(.bottom, 54)
+        }
     }
 }
+
 
 #Preview {
     TabBarView()
