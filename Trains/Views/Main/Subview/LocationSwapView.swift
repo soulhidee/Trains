@@ -6,10 +6,7 @@ struct LocationSwapView: View {
     @State private var toCity = ""
     @State private var toStation = ""
     
-    @State private var showingFromCityPicker = false
-    @State private var showingToCityPicker = false
-    @State private var showingFromStationPicker = false
-    @State private var showingToStationPicker = false
+    @Binding var path: NavigationPath
     
     private var fromLocation: String {
         fromStation.isEmpty ? fromCity : fromStation
@@ -23,14 +20,14 @@ struct LocationSwapView: View {
         HStack(spacing: 16) {
             VStack(spacing: 12) {
                 Button {
-                    showingFromCityPicker = true
+                    path.append(NavigationRoute.selectFromCity)
                 } label: {
                     LocationTextField(placeholder: "Откуда", text: .constant(fromLocation))
                 }
                 .buttonStyle(.plain)
                
                 Button {
-                    showingToCityPicker = true
+                    path.append(NavigationRoute.selectToCity)
                 } label: {
                     LocationTextField(placeholder: "Куда", text: .constant(toLocation))
                 }
@@ -52,41 +49,43 @@ struct LocationSwapView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color.ypBlue)
         )
-        .fullScreenCover(isPresented: $showingFromCityPicker) {
-            SelectCityView { selectedCity in
-                fromCity = selectedCity
-                fromStation = ""
-                showingFromCityPicker = false
-                showingFromStationPicker = true
-            }
-        }
-        .fullScreenCover(isPresented: $showingToCityPicker) {
-            SelectCityView { selectedCity in
-                toCity = selectedCity
-                toStation = ""
-                showingToCityPicker = false
-                showingToStationPicker = true
-            }
-        }
-        .fullScreenCover(isPresented: $showingFromStationPicker) {
-            if !fromCity.isEmpty {
-                SelectStationView(cityName: fromCity) { selectedStation in
-                    fromStation = selectedStation
-                    showingFromStationPicker = false
+        .navigationDestination(for: NavigationRoute.self) { route in
+            switch route {
+            case .selectFromCity:
+                SelectCityView { city in
+                    fromCity = city
+                    fromStation = ""
+                    path.append(NavigationRoute.selectFromStation(city: city))
                 }
-            }
-        }
-        .fullScreenCover(isPresented: $showingToStationPicker) {
-            if !toCity.isEmpty {
-                SelectStationView(cityName: toCity) { selectedStation in
-                    toStation = selectedStation
-                    showingToStationPicker = false
+                .navigationBarBackButtonHidden(false)
+                        .toolbar(.hidden, for: .tabBar)
+            case .selectToCity:
+                SelectCityView { city in
+                    toCity = city
+                    toStation = ""
+                    path.append(NavigationRoute.selectToStation(city: city))
                 }
+                .navigationBarBackButtonHidden(false)
+                        .toolbar(.hidden, for: .tabBar)
+            case .selectFromStation(let city):
+                SelectStationView(cityName: city) { station in
+                    fromStation = station
+                    path.removeLast(2)
+                }
+                .navigationBarBackButtonHidden(false)
+                        .toolbar(.hidden, for: .tabBar)
+            case .selectToStation(let city):
+                SelectStationView(cityName: city) { station in
+                    toStation = station
+                    path.removeLast(2)
+                }
+                .navigationBarBackButtonHidden(false)
+                        .toolbar(.hidden, for: .tabBar)
             }
         }
     }
 }
 
 #Preview {
-    LocationSwapView()
+    LocationSwapView(path: .constant(NavigationPath()))
 }

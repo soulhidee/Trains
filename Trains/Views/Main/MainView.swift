@@ -1,15 +1,17 @@
 import SwiftUI
 
 struct MainView: View {
-
+    @State private var path = NavigationPath()
     var body: some View {
-        VStack {
-            LocationSwapView()
-                .padding()
-            Spacer()
+        NavigationStack(path: $path) {
+            VStack {
+                LocationSwapView(path: $path)
+                    .padding()
+                Spacer()
+            }
         }
     }
-   
+    
 }
 
 #Preview {
