@@ -34,7 +34,7 @@ struct LocationSwapView: View {
                     LocationTextField(placeholder: "Откуда", text: .constant(fromLocation))
                 }
                 .buttonStyle(.plain)
-               
+                
                 Button {
                     showingToCityPicker = true
                 } label: {
@@ -58,38 +58,7 @@ struct LocationSwapView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color.ypBlue)
         )
-        .fullScreenCover(isPresented: $showingFromCityPicker) {
-            SelectCityView { selectedCity in
-                fromCity = selectedCity
-                fromStation = ""
-                showingFromCityPicker = false
-                showingFromStationPicker = true
-            }
-        }
-        .fullScreenCover(isPresented: $showingToCityPicker) {
-            SelectCityView { selectedCity in
-                toCity = selectedCity
-                toStation = ""
-                showingToCityPicker = false
-                showingToStationPicker = true
-            }
-        }
-        .fullScreenCover(isPresented: $showingFromStationPicker) {
-            if !fromCity.isEmpty {
-                SelectStationView(cityName: fromCity) { selectedStation in
-                    fromStation = selectedStation
-                    showingFromStationPicker = false
-                }
-            }
-        }
-        .fullScreenCover(isPresented: $showingToStationPicker) {
-            if !toCity.isEmpty {
-                SelectStationView(cityName: toCity) { selectedStation in
-                    toStation = selectedStation
-                    showingToStationPicker = false
-                }
-            }
-        }
+        
     }
 }
 
