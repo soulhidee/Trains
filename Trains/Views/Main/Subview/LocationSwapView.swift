@@ -12,17 +12,11 @@ struct LocationSwapView: View {
     @State private var showingToStationPicker = false
     
     private var fromLocation: String {
-        if fromStation.isEmpty {
-            return fromCity
-        }
-        return fromStation
+        fromStation.isEmpty ? fromCity : fromStation
     }
     
     private var toLocation: String {
-        if toStation.isEmpty {
-            return toCity
-        }
-        return toStation
+        toStation.isEmpty ? toCity : toStation
     }
     
     var body: some View {
