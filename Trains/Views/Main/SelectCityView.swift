@@ -36,6 +36,13 @@ struct SelectCityView: View {
             .navigationTitle("Выбор города")
             .navigationBarTitleDisplayMode(.inline)
             .searchable(text: $searchText, prompt: "Введите запрос")
+            .overlay {
+                if filterCities.isEmpty && !searchText.isEmpty {
+                    Text("Город не найден")
+                        .font(.system(size: 24, weight: .bold))
+                }
+            }
+            
         }
         .environment(\.defaultMinListRowHeight, 60)
         .listStyle(.plain)
