@@ -14,35 +14,32 @@ struct SelectionListView: View {
         if searchText.isEmpty {
             return items
         } else {
-            return items.filter { item in
-                item.localizedStandardContains(searchText)
-            }
+            return items.filter { $0.localizedStandardContains(searchText) }
         }
     }
     
     var body: some View {
-        NavigationStack {
-            List(filterItems, id: \.self) { item in
-                Button {
-                    onSelect(item)
-                } label: {
-                    RowSelectionView(title: item)
-                }
-                .buttonStyle(.plain)
-                .listRowSeparator(.hidden)
+        List(filterItems, id: \.self) { item in
+            Button {
+                onSelect(item)
+            } label: {
+                RowSelectionView(title: item)
             }
-            .navigationTitle(title)
-            .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchText, prompt: searchPrompt)
-            .overlay {
-                if filterItems.isEmpty && !searchText.isEmpty {
-                    Text(emptyMassage)
-                        .font(.system(size: 24, weight: .bold))
-                }
+            .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
+        }
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $searchText, prompt: searchPrompt)
+        .overlay {
+            if filterItems.isEmpty && !searchText.isEmpty {
+                Text(emptyMassage)
+                    .font(.system(size: 24, weight: .bold))
             }
         }
         .environment(\.defaultMinListRowHeight, 60)
         .listStyle(.plain)
+        
     }
 }
 

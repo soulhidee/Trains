@@ -18,7 +18,8 @@ struct SelectCityView: View {
             searchPrompt: "Введите запрос",
             emptyMassage: "Город не найден",
             items: cities,
-            onSelect: onSelect)
+            onSelect: onSelect
+        )
         
     }
 }
