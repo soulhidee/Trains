@@ -1,10 +1,10 @@
 import SwiftUI
 
-struct RowCityView: View {
-    let city: City
+struct RowSelectionView: View {
+    let title: String
     var body: some View {
         HStack {
-            Text(city.name)
+            Text(title)
                 .font(.system(size: 17, weight: .regular))
                 .foregroundStyle(.ypBlack)
             Spacer()
@@ -15,5 +15,5 @@ struct RowCityView: View {
 }
 
 #Preview {
-    RowCityView(city: City(name: "Москва"))
+    RowSelectionView(title: "Москва")
 }

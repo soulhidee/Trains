@@ -5,15 +5,7 @@ import SwiftUI
 struct SelectCityView: View {
     let onSelect: (String) -> Void
     @State private var searchText = ""
-    private var filterCities: [City] {
-        if searchText.isEmpty {
-            return cities
-        } else {
-            return cities.filter { city in
-                city.name.localizedStandardContains(searchText)
-            }
-        }
-    }
+
     
     private let cities = [
         City(name: "Москва"),
@@ -27,25 +19,25 @@ struct SelectCityView: View {
     
     
     var body: some View {
-        NavigationStack {
-            List(filterCities) { city in
-                RowCityView(city: city)
-                    .listRowSeparator(.hidden)
-            }
-            
-            .navigationTitle("Выбор города")
-            .navigationBarTitleDisplayMode(.inline)
-            .searchable(text: $searchText, prompt: "Введите запрос")
-            .overlay {
-                if filterCities.isEmpty && !searchText.isEmpty {
-                    Text("Город не найден")
-                        .font(.system(size: 24, weight: .bold))
-                }
-            }
-            
-        }
-        .environment(\.defaultMinListRowHeight, 60)
-        .listStyle(.plain)
+//        NavigationStack {
+//            List(filterCities) { city in
+//                RowCityView(city: city)
+//                    .listRowSeparator(.hidden)
+//            }
+//            
+//            .navigationTitle("Выбор города")
+//            .navigationBarTitleDisplayMode(.inline)
+//            .searchable(text: $searchText, prompt: "Введите запрос")
+//            .overlay {
+//                if filterCities.isEmpty && !searchText.isEmpty {
+//                    Text("Город не найден")
+//                        .font(.system(size: 24, weight: .bold))
+//                }
+//            }
+//            
+//        }
+//        .environment(\.defaultMinListRowHeight, 60)
+//        .listStyle(.plain)
         
     }
 }
