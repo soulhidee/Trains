@@ -24,7 +24,7 @@ struct SelectCityView: View {
         City(name: "Казань"),
         City(name: "Омск"),
     ]
-
+    
     
     var body: some View {
         NavigationStack {
@@ -52,6 +52,6 @@ struct SelectCityView: View {
 
 #Preview {
     SelectCityView { city in
-    print("Выбран: \(city)")
+        print("Выбран: \(city)")
     }
 }
