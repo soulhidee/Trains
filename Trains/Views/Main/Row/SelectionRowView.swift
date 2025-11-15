@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct RowSelectionView: View {
+struct SelectionRowView: View {
     let title: String
     var body: some View {
         HStack {
@@ -15,5 +15,5 @@ struct RowSelectionView: View {
 }
 
 #Preview {
-    RowSelectionView(title: "Москва")
+    SelectionRowView(title: "Москва")
 }

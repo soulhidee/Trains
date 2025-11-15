@@ -23,7 +23,7 @@ struct SelectionListView: View {
             Button {
                 onSelect(item)
             } label: {
-                RowSelectionView(title: item)
+                SelectionRowView(title: item)
             }
             .buttonStyle(.plain)
             .listRowSeparator(.hidden)
