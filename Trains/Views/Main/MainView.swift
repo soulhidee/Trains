@@ -5,6 +5,7 @@ struct MainView: View {
     @State private var fromStation = ""
     @State private var toCity = ""
     @State private var toStation = ""
+    @State private var showCarrierList = false
     
     private var isReadyToSearch: Bool {
         !fromCity.isEmpty && !toCity.isEmpty
@@ -22,11 +23,23 @@ struct MainView: View {
             .padding(.top)
             
             if isReadyToSearch {
-                FindButton()
-                    .padding(.horizontal)
+                PrimaryButton(title: "Найти") {
+                    showCarrierList = true
+                }
+                
+                .padding(.horizontal, 112.5)
             }
             
             Spacer()
+        }
+        .fullScreenCover(isPresented: $showCarrierList) {
+            NavigationStack {
+                CarrierListView(
+                    fromCity: fromCity,
+                    toCity: toCity,
+                    fromStation: fromStation,
+                    toStation: fromStation)
+            }
         }
     }
 }
