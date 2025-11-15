@@ -10,6 +10,8 @@ import SwiftUI
 struct SelectStationView: View {
     let cityName: String
     let onSelect: (String) -> Void
+    @Environment(\.dismiss) private var dismiss
+    
     private var stations: [String] {
         if cityName == "Москва" {
             return [
@@ -38,10 +40,25 @@ struct SelectStationView: View {
                           emptyMassage: "Станция не найдена",
                           items: stations,
                           onSelect: onSelect)
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.ypBlack)
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    SelectStationView(cityName: "Москва") { city in
+    NavigationStack {
+        SelectStationView(cityName: "Москва") { station in
+            print("Выбрана: \(station)")
+        }
     }
 }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SelectCityView: View {
     let onSelect: (String) -> Void
+    @Environment(\.dismiss) private var dismiss
     private let cities = [
         "Москва",
         "Санкт Петербург",
@@ -20,12 +21,24 @@ struct SelectCityView: View {
             items: cities,
             onSelect: onSelect
         )
-        
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "arrow.left")
+                        .foregroundStyle(.ypBlack)
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    SelectCityView { city in
-        print("Выбран: \(city)")
+    NavigationStack {
+        SelectCityView { city in
+            print("Выбран: \(city)")
+        }
     }
 }

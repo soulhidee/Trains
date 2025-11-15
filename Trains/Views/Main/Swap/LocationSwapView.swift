@@ -6,6 +6,9 @@ struct LocationSwapView: View {
     @State private var toCity = ""
     @State private var toStation = ""
     
+    @State private var showFromCitySelection = false
+    @State private var showToCitySelection = false
+    @State private var navigationPath = NavigationPath()
     
     private var fromLocation: String {
         fromStation.isEmpty ? fromCity : fromStation
@@ -19,12 +22,14 @@ struct LocationSwapView: View {
         HStack(spacing: 16) {
             VStack(spacing: 12) {
                 Button {
+                    showFromCitySelection = true
                 } label: {
                     LocationTextField(placeholder: "Откуда", text: .constant(fromLocation))
                 }
                 .buttonStyle(.plain)
                 
                 Button {
+                    showToCitySelection = true
                 } label: {
                     LocationTextField(placeholder: "Куда", text: .constant(toLocation))
                 }
@@ -46,8 +51,58 @@ struct LocationSwapView: View {
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color.ypBlue)
         )
+        .fullScreenCover(isPresented: $showFromCitySelection) {
+            NavigationStack(path: $navigationPath) {
+                SelectCityView { selectedCity in
+                    fromCity = selectedCity
+                    fromStation = ""
+                    navigationPath.append(SelectionDestination.station(cityName: selectedCity, isFrom: true))
+                }
+                .navigationDestination(for: SelectionDestination.self) { destination in
+                    switch destination {
+                    case .station(let cityName, let isFrom):
+                        SelectStationView(cityName: cityName) { selectedStation in
+                            if isFrom {
+                                fromStation = selectedStation
+                            } else {
+                                toStation = selectedStation
+                            }
+                            showFromCitySelection = false
+                            showToCitySelection = false
+                            navigationPath = NavigationPath()
+                        }
+                    }
+                }
+            }
+        }
+        .fullScreenCover(isPresented: $showToCitySelection) {
+            NavigationStack(path: $navigationPath) {
+                SelectCityView { selectedCity in
+                    toCity = selectedCity
+                    toStation = ""
+                    navigationPath.append(SelectionDestination.station(cityName: selectedCity, isFrom: false))
+                }
+                .navigationDestination(for: SelectionDestination.self) { destination in
+                    switch destination {
+                    case .station(let cityName, let isFrom):
+                        SelectStationView(cityName: cityName) { selectedStation in
+                            if isFrom {
+                                fromStation = selectedStation
+                            } else {
+                                toStation = selectedStation
+                            }
+                            showFromCitySelection = false
+                            showToCitySelection = false
+                            navigationPath = NavigationPath()
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
+
 
 #Preview {
     LocationSwapView()

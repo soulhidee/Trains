@@ -30,7 +30,7 @@ struct SelectionListView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchText, prompt: searchPrompt)
+        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: searchPrompt)
         .overlay {
             if filterItems.isEmpty && !searchText.isEmpty {
                 Text(emptyMassage)
@@ -46,7 +46,13 @@ struct SelectionListView: View {
 
 
 #Preview {
-    SelectionListView(title: "Выбор города", searchPrompt: "Поиск", emptyMassage: "Не удалось найти", items: ["Москва", "Спб"], onSelect: {_ in
-        
-    })
+    NavigationStack {
+        SelectionListView(
+            title: "Выбор города",
+            searchPrompt: "Поиск",
+            emptyMassage: "Не удалось найти",
+            items: ["Москва", "Спб"],
+            onSelect: {_ in }
+        )
+    }
 }
