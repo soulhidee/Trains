@@ -21,17 +21,6 @@ struct SelectCityView: View {
             items: cities,
             onSelect: onSelect
         )
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "arrow.left")
-                        .foregroundStyle(.ypBlack)
-                }
-            }
-        }
     }
 }
 

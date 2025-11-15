@@ -40,18 +40,6 @@ struct SelectStationView: View {
                           emptyMassage: "Станция не найдена",
                           items: stations,
                           onSelect: onSelect)
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.ypBlack)
-                }
-            }
-        }
     }
 }
 

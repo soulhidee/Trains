@@ -9,7 +9,7 @@ struct LocationTextField: View {
     var body: some View {
         HStack(spacing: 12) {
             TextField(placeholder, text: $text)
-                .foregroundStyle(.ypGray)
+                .foregroundStyle(.ypBlack)
                 .textInputAutocapitalization(.words)
         }
         

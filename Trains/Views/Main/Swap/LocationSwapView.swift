@@ -10,12 +10,16 @@ struct LocationSwapView: View {
     @State private var showToCitySelection = false
     @State private var navigationPath = NavigationPath()
     
+    private func formattedLocation(city: String, station: String) -> String {
+        city.isEmpty && station.isEmpty ? "" : "\(city) (\(station))"
+    }
+    
     private var fromLocation: String {
-        fromStation.isEmpty ? fromCity : fromStation
+        formattedLocation(city: fromCity, station: fromStation)
     }
     
     private var toLocation: String {
-        toStation.isEmpty ? toCity : toStation
+        formattedLocation(city: toCity, station: toStation)
     }
     
     var body: some View {
