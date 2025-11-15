@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct LocationSwapView: View {
-    @State private var fromCity = ""
-    @State private var fromStation = ""
-    @State private var toCity = ""
-    @State private var toStation = ""
+    @Binding var fromCity: String
+    @Binding var fromStation: String
+    @Binding var toCity: String
+    @Binding var toStation: String
     
     @State private var showFromCitySelection = false
     @State private var showToCitySelection = false
@@ -109,5 +109,15 @@ struct LocationSwapView: View {
 
 
 #Preview {
-    LocationSwapView()
+    @Previewable @State var fromCity = ""
+    @Previewable @State var fromStation = ""
+    @Previewable @State var toCity = ""
+    @Previewable @State var toStation = ""
+    
+    LocationSwapView(
+        fromCity: $fromCity,
+        fromStation: $fromStation,
+        toCity: $toCity,
+        toStation: $toStation
+    )
 }
