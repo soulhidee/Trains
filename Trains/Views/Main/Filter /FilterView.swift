@@ -2,9 +2,8 @@ import SwiftUI
 
 struct FilterView: View {
     @Environment(\.dismiss) private var dismiss
-    
-    @State private var selectedTimes: Set<DepartureTime> = []
-    @State private var showTransfers: Bool? = nil
+    @Binding var selectedTimes: Set<DepartureTime>
+    @Binding var showTransfers: Bool?
     
     private var hasAnySelection: Bool {
         !selectedTimes.isEmpty || showTransfers != nil
@@ -41,7 +40,11 @@ struct FilterView: View {
                         isSelected: showTransfers == option.boolValue,
                         selectionType: .radio,
                         action: {
-                            showTransfers = option.boolValue
+                            if showTransfers == option.boolValue {
+                                showTransfers = nil
+                            } else {
+                                showTransfers = option.boolValue
+                            }
                         }
                     )
                 }
@@ -82,7 +85,7 @@ struct FilterView: View {
                 .padding()
             }
         }
-                .navigationBarBackButtonHidden(true)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -98,7 +101,10 @@ struct FilterView: View {
 }
 
 #Preview {
+    @Previewable @State var selectedTimes: Set<DepartureTime> = []
+    @Previewable @State var showTransfers: Bool? = nil
+    
     NavigationStack {
-        FilterView()
+        FilterView(selectedTimes: $selectedTimes, showTransfers: $showTransfers)
     }
 }

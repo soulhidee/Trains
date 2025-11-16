@@ -17,6 +17,13 @@ struct CarrierListView: View {
     
     @Environment(\.dismiss) private var dismiss
     @State private var showFilterView = false
+    @State private var selectedTimes: Set<DepartureTime> = []
+    @State private var showTransfers: Bool? = nil
+    
+    private var hasActiveFilters: Bool {
+        !selectedTimes.isEmpty || showTransfers != nil
+    }
+    
     
     private var routeTitle: String {
         "\(fromCity)\(fromStation.isEmpty ? "" : " (\(fromStation))") → \(toCity)\(toStation.isEmpty ? "" : " (\(toStation))")"
@@ -44,39 +51,38 @@ struct CarrierListView: View {
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
             }
-            
-            PrimaryButton(title: "Уточнить время", action: {
+            PrimaryButton(title: "Уточнить время", showIndicator: hasActiveFilters) {
                 showFilterView = true
-            })
+            }
             .padding()
-        }
-        .navigationDestination(isPresented: $showFilterView) {
-            FilterView()
-        }
-        
-        .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.ypBlack)
+            .navigationDestination(isPresented: $showFilterView) {
+                FilterView(selectedTimes: $selectedTimes, showTransfers: $showTransfers)
+            }
+            
+            .navigationBarBackButtonHidden(true)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.ypBlack)
+                    }
                 }
             }
         }
     }
 }
-
-
-#Preview {
-    NavigationStack {
-        CarrierListView(
-            fromCity: "Москва",
-            toCity: "Санкт Петербург",
-            fromStation: "Ярославский вокзал",
-            toStation: "Балтийский вокзал"
-        )
+    
+    
+    #Preview {
+        NavigationStack {
+            CarrierListView(
+                fromCity: "Москва",
+                toCity: "Санкт Петербург",
+                fromStation: "Ярославский вокзал",
+                toStation: "Балтийский вокзал"
+            )
+        }
     }
-}
