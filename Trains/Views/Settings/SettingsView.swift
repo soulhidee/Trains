@@ -2,7 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        Text("Hello, Settings!")
+        ErrorView(image: Image(.errorServer), title: "Ошибка сервера")
     }
 }
 
