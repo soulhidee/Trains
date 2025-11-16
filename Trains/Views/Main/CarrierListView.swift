@@ -24,6 +24,13 @@ struct CarrierListView: View {
         !selectedTimes.isEmpty || showTransfers != nil
     }
     
+    private var filteredCarriers: [Int] {
+        if hasActiveFilters {
+            return []
+        }
+        return Array(0..<3)
+    }
+    
     
     private var routeTitle: String {
         "\(fromCity)\(fromStation.isEmpty ? "" : " (\(fromStation))") → \(toCity)\(toStation.isEmpty ? "" : " (\(toStation))")"
@@ -37,19 +44,29 @@ struct CarrierListView: View {
                     .foregroundColor(.ypBlack)
                     .padding()
                 
-                List {
-                    ForEach(0..<3, id: \.self) { index in
-                        NavigationLink {
-                            CarrierCardView()
-                        } label: {
-                            Text("Перевозчик \(index + 1)")
-                                .foregroundColor(.ypBlack)
-                                .padding()
+                if filteredCarriers.isEmpty && hasActiveFilters {
+                    Spacer()
+                        .frame(height: 221)
+                    Text("Вариантов нет")
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundStyle(.ypBlack)
+                    Spacer()
+                } else {
+                    
+                    List {
+                        ForEach(0..<3, id: \.self) { index in
+                            NavigationLink {
+                                CarrierCardView()
+                            } label: {
+                                Text("Перевозчик \(index + 1)")
+                                    .foregroundColor(.ypBlack)
+                                    .padding()
+                            }
                         }
                     }
+                    .scrollContentBackground(.hidden)
+                    .listStyle(.plain)
                 }
-                .scrollContentBackground(.hidden)
-                .listStyle(.plain)
             }
             PrimaryButton(title: "Уточнить время", showIndicator: hasActiveFilters) {
                 showFilterView = true
@@ -74,15 +91,15 @@ struct CarrierListView: View {
         }
     }
 }
-    
-    
-    #Preview {
-        NavigationStack {
-            CarrierListView(
-                fromCity: "Москва",
-                toCity: "Санкт Петербург",
-                fromStation: "Ярославский вокзал",
-                toStation: "Балтийский вокзал"
-            )
-        }
+
+
+#Preview {
+    NavigationStack {
+        CarrierListView(
+            fromCity: "Москва",
+            toCity: "Санкт Петербург",
+            fromStation: "Ярославский вокзал",
+            toStation: "Балтийский вокзал"
+        )
     }
+}
