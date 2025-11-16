@@ -16,6 +16,7 @@ struct CarrierListView: View {
     let toStation: String
     
     @Environment(\.dismiss) private var dismiss
+    @State private var showFilterView = false
     
     private var routeTitle: String {
         "\(fromCity)\(fromStation.isEmpty ? "" : " (\(fromStation))") → \(toCity)\(toStation.isEmpty ? "" : " (\(toStation))")"
@@ -45,10 +46,14 @@ struct CarrierListView: View {
             }
             
             PrimaryButton(title: "Уточнить время", action: {
-                // Действие для кнопки
+                showFilterView = true
             })
             .padding()
         }
+        .navigationDestination(isPresented: $showFilterView) {
+            FilterView()
+        }
+        
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
