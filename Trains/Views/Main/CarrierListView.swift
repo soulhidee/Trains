@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+import SwiftUI
+
 struct CarrierListView: View {
     let fromCity: String
     let toCity: String
@@ -28,34 +30,40 @@ struct CarrierListView: View {
                     .padding()
                 
                 List {
-                    ForEach(0..<3) { _ in
-                            Text("Перевозчик")
-                            .padding()
+                    ForEach(0..<3, id: \.self) { index in
+                        NavigationLink {
+                            CarrierCardView()
+                        } label: {
+                            Text("Перевозчик \(index + 1)")
+                                .foregroundColor(.ypBlack)
+                                .padding()
+                        }
                     }
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(.plain)
-
             }
-            PrimaryButton(title: "Уточнить Вермя", action: {
-                
+            
+            PrimaryButton(title: "Уточнить время", action: {
+                // Действие для кнопки
             })
             .padding()
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 17, weight: .semibold))
-                            .foregroundColor(.ypBlack)
-                    }
+        }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.ypBlack)
                 }
             }
         }
     }
 }
+
 
 #Preview {
     NavigationStack {

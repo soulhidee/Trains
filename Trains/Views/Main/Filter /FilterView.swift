@@ -4,7 +4,11 @@ struct FilterView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State private var selectedTimes: Set<DepartureTime> = []
-    @State private var showTransfers = true
+    @State private var showTransfers: Bool? = nil
+    
+    private var hasAnySelection: Bool {
+        !selectedTimes.isEmpty || showTransfers != nil
+    }
     
     private var sections: [FilterSection] {
         [
@@ -46,29 +50,39 @@ struct FilterView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(sections) { section in
-                Section {
-                    ForEach(section.items) { item in
-                        FilterRowView(
-                            title: item.title,
-                            isSelected: item.isSelected,
-                            selectionType: item.selectionType
-                        )
-                        .contentShape(Rectangle())
-                        .onTapGesture {
-                            item.action()
+        VStack(spacing: 0) {
+            List {
+                ForEach(sections) { section in
+                    Section {
+                        ForEach(section.items) { item in
+                            FilterRowView(
+                                title: item.title,
+                                isSelected: item.isSelected,
+                                selectionType: item.selectionType
+                            )
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                item.action()
+                            }
                         }
+                    } header: {
+                        FilterHeaderView(title: section.title)
+                            .textCase(nil)
                     }
-                } header: {
-                    FilterHeaderView(title: section.title)
-                        .textCase(nil)
+                    .listRowSeparator(.hidden)
                 }
-                .listRowSeparator(.hidden)
+            }
+            .listStyle(.plain)
+            .environment(\.defaultMinListRowHeight, 60)
+            
+            if hasAnySelection {
+                PrimaryButton(title: "Применить", action: {
+                    dismiss()
+                })
+                .padding()
             }
         }
-        .listStyle(.plain)
-        .navigationBarBackButtonHidden(true)
+                .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 Button {
@@ -80,14 +94,7 @@ struct FilterView: View {
                 }
             }
         }
-        .environment(\.defaultMinListRowHeight, 60)
-        
-        PrimaryButton(title: "Применить", action: {
-            
-        })
-        .padding()
     }
-    
 }
 
 #Preview {
