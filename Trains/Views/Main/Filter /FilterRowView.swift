@@ -34,7 +34,7 @@ struct FilterRowView: View {
         case .checkbox:
             isSelected ? "checkmark.square.fill" : "square"
         case .radio:
-            isSelected ? "circle.fill" : "circle"
+            isSelected ? "record.circle" : "circle"
         }
     }
 }

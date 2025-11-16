@@ -1,13 +1,13 @@
 import Foundation
 
 struct FilterSection: Identifiable {
-    let id: UUID
+    let id: String
     let title: String
     let items: [FilterItem]
 }
 
 struct FilterItem: Identifiable {
-    let id: UUID
+    let id: String
     let title: String
     let isSelected: Bool
     let selectionType: FilterRowView.SelectionType
