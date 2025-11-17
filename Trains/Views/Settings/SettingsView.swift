@@ -2,7 +2,14 @@ import SwiftUI
 
 struct SettingsView: View {
     var body: some View {
-        ErrorView(image: Image(.errorServer), title: "Ошибка сервера")
+        VStack {
+            ErrorView(image: Image(.errorServer), title: "Ошибка сервера")
+                .background(Color.ypWhite)
+        }
+        
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.ypWhite)
+        
     }
 }
 

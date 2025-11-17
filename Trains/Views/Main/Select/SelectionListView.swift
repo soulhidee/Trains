@@ -27,6 +27,7 @@ struct SelectionListView: View {
             }
             .buttonStyle(.plain)
             .listRowSeparator(.hidden)
+            .listRowBackground(Color.ypWhite)
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
@@ -51,7 +52,7 @@ struct SelectionListView: View {
         }
         .environment(\.defaultMinListRowHeight, 60)
         .listStyle(.plain)
-        
+        .background(Color.ypWhite)
     }
 }
 

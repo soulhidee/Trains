@@ -1,12 +1,3 @@
-//
-//  CarrierListView.swift
-//  Trains
-//
-//  Created by Даниил on 15.11.2025.
-//
-
-import SwiftUI
-
 import SwiftUI
 
 struct CarrierListView: View {
@@ -63,7 +54,9 @@ struct CarrierListView: View {
                                     .padding()
                             }
                         }
+                        .listRowBackground(Color.ypWhite)
                     }
+                    
                     .scrollContentBackground(.hidden)
                     .listStyle(.plain)
                 }
@@ -89,6 +82,7 @@ struct CarrierListView: View {
                 }
             }
         }
+        .background(Color.ypWhite)
     }
 }
 

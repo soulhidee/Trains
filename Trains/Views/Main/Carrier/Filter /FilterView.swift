@@ -63,7 +63,7 @@ struct FilterView: View {
                                 isSelected: item.isSelected,
                                 selectionType: item.selectionType
                             )
-                            .contentShape(Rectangle())
+                            .listRowBackground(Color.ypWhite)
                             .onTapGesture {
                                 item.action()
                             }
@@ -78,6 +78,7 @@ struct FilterView: View {
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, 60)
             
+            
             if hasAnySelection {
                 PrimaryButton(title: "Применить", action: {
                     dismiss()
@@ -85,6 +86,7 @@ struct FilterView: View {
                 .padding()
             }
         }
+        .background(Color.ypWhite)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {

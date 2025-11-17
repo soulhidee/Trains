@@ -11,15 +11,10 @@ struct LocationSwapView: View {
     @State private var navigationPath = NavigationPath()
     
     private func formattedLocation(city: String, station: String) -> String {
-        city.isEmpty && station.isEmpty ? "" : "\(city) (\(station))"
-    }
-    
-    private var fromLocation: String {
-        formattedLocation(city: fromCity, station: fromStation)
-    }
-    
-    private var toLocation: String {
-        formattedLocation(city: toCity, station: toStation)
+        if city.isEmpty && station.isEmpty {
+            return ""
+        }
+        return "\(city) (\(station))"
     }
     
     var body: some View {
@@ -28,14 +23,22 @@ struct LocationSwapView: View {
                 Button {
                     showFromCitySelection = true
                 } label: {
-                    LocationTextField(placeholder: "Откуда", text: .constant(fromLocation))
+                    LocationTextFieldDisplay(
+                        placeholder: "Откуда",
+                        city: fromCity,
+                        station: fromStation
+                    )
                 }
                 .buttonStyle(.plain)
                 
                 Button {
                     showToCitySelection = true
                 } label: {
-                    LocationTextField(placeholder: "Куда", text: .constant(toLocation))
+                    LocationTextFieldDisplay(
+                        placeholder: "Куда",
+                        city: toCity,
+                        station: toStation
+                    )
                 }
                 .buttonStyle(.plain)
             }
@@ -105,8 +108,6 @@ struct LocationSwapView: View {
         }
     }
 }
-
-
 
 #Preview {
     @Previewable @State var fromCity = ""

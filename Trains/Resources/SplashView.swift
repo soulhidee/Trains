@@ -1,0 +1,39 @@
+//
+//  SplashView.swift
+//  Trains
+//
+//  Created by Даниил on 17.11.2025.
+//
+
+import SwiftUI
+
+struct SplashView: View {
+    @State private var isActive = false
+    
+    var body: some View {
+        if isActive {
+            TabBarView()
+        } else {
+            ZStack {
+                Color.black
+                    .edgesIgnoringSafeArea(.all)
+                Image(.launchScreen)
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
+            }
+            .onAppear {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    withAnimation {
+                        isActive = true
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#Preview {
+    SplashView()
+}

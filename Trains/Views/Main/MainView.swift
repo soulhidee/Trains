@@ -32,13 +32,14 @@ struct MainView: View {
             
             Spacer()
         }
+        .background(Color.ypWhite)
         .fullScreenCover(isPresented: $showCarrierList) {
             NavigationStack {
                 CarrierListView(
                     fromCity: fromCity,
                     toCity: toCity,
                     fromStation: fromStation,
-                    toStation: fromStation)
+                    toStation: toStation)
             }
         }
     }

@@ -11,6 +11,7 @@ struct SelectionRowView: View {
             Image(.arrow)
                 .foregroundStyle(.ypBlack)
         }
+        .background(Color.ypWhite)
     }
 }
 

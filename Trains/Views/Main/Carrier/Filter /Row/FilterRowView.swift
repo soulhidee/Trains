@@ -27,6 +27,7 @@ struct FilterRowView: View {
             Image(systemName: iconName)
                 .font(.system(size: 24))
         }
+        .background(Color.ypWhite)
     }
     
     private var iconName: String {
