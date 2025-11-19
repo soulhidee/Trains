@@ -3,11 +3,13 @@ import SwiftUI
 struct PrimaryButton: View {
     let title: String
     let showIndicator: Bool
+    let customWidth: CGFloat?
     let action: () -> Void
     
-    init(title: String, showIndicator: Bool = false, action: @escaping () -> Void) {
+    init(title: String, showIndicator: Bool = false, customWidth: CGFloat? = nil, action: @escaping () -> Void) {
         self.title = title
         self.showIndicator = showIndicator
+        self.customWidth = customWidth
         self.action = action
     }
     
@@ -24,7 +26,7 @@ struct PrimaryButton: View {
                         .frame(width: 8, height: 8)
                 }
             }
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: customWidth ?? .infinity)
             .padding(.vertical, 20)
             .background(Color.ypBlue)
             .cornerRadius(16)
@@ -40,6 +42,10 @@ struct PrimaryButton: View {
         
         PrimaryButton(title: "Уточнить время", showIndicator: true, action: {
             print("Фильтр нажат")
+        })
+        
+        PrimaryButton(title: "Фиксированная", customWidth: 200, action: {
+            print("Кнопка с фиксированной шириной")
         })
     }
     .padding()

@@ -12,10 +12,20 @@ struct FilterRowView: View {
     let isSelected: Bool
     let selectionType: SelectionType
     
+    private var iconName: String {
+        switch selectionType {
+        case .checkbox:
+            isSelected ? "checkmark.square.fill" : "square"
+        case .radio:
+            isSelected ? "record.circle" : "circle"
+        }
+    }
+    
     enum SelectionType {
         case checkbox
         case radio
     }
+    
     var body: some View {
         HStack {
             Text(title)
@@ -30,14 +40,7 @@ struct FilterRowView: View {
         .background(Color.ypWhite)
     }
     
-    private var iconName: String {
-        switch selectionType {
-        case .checkbox:
-            isSelected ? "checkmark.square.fill" : "square"
-        case .radio:
-            isSelected ? "record.circle" : "circle"
-        }
-    }
+   
 }
 
 #Preview {

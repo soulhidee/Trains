@@ -23,11 +23,11 @@ struct MainView: View {
             .padding(.top)
             
             if isReadyToSearch {
-                PrimaryButton(title: "Найти") {
+                PrimaryButton(title: "Найти", customWidth: 150) {
                     showCarrierList = true
                 }
                 
-                .padding(.horizontal, 112.5)
+                .padding(.horizontal, 113)
             }
             
             Spacer()

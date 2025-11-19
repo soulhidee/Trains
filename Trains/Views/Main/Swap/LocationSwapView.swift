@@ -19,7 +19,7 @@ struct LocationSwapView: View {
     
     var body: some View {
         HStack(spacing: 16) {
-            VStack(spacing: 12) {
+            VStack(spacing: 28) {
                 Button {
                     showFromCitySelection = true
                 } label: {
