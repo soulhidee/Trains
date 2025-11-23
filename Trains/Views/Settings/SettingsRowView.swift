@@ -28,7 +28,6 @@ struct SettingsRowView: View {
         self.action = action
     }
     
-    
     var body: some View {
         Button(action: {
             action?()
@@ -50,6 +49,7 @@ struct SettingsRowView: View {
                 }
             }
         }
+        .listRowBackground(Color.ypWhite)
     }
 }
 

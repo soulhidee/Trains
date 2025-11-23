@@ -22,6 +22,7 @@ struct SettingsView: View {
             .listRowSeparator(.hidden)
             .environment(\.defaultMinListRowHeight, 60)
             .scrollDisabled(true)
+            .scrollContentBackground(.hidden)
             .background(Color.ypWhite)
             
             Spacer()
@@ -30,6 +31,7 @@ struct SettingsView: View {
             
             Spacer()
         }
+        .background(Color.ypWhite)
         .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
     }
 

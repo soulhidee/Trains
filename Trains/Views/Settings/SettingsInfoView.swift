@@ -17,6 +17,7 @@ struct SettingsInfoView: View {
                 .font(.system(size: 12, weight: .regular))
                 .foregroundStyle(.ypBlack)
         }
+        .background(Color.ypWhite)
     }
 }
 
