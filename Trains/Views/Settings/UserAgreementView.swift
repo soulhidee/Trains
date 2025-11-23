@@ -10,8 +10,13 @@ import SwiftUI
 
 struct UserAgreementView: View {
     var body: some View {
-        WebView(url: URL(string: "https://yandex.ru/legal/practicum_offer/ru/")!)
-            .edgesIgnoringSafeArea(.bottom)
+        if let url = URL(string: "https://yandex.ru/legal/practicum_offer/ru/") {
+            WebView(url: url)
+                .edgesIgnoringSafeArea(.bottom)
+        } else {
+            Text("Ошибка загрузки документа")
+                .foregroundColor(.ypRed)
+        }
     }
 }
 
