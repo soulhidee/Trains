@@ -1,7 +1,10 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
     @EnvironmentObject var themeManager: ThemeManager
+    @State private var showUserAgreement = false
+    
     var body: some View {
         VStack(spacing: 24) {
             List {
@@ -12,9 +15,9 @@ struct SettingsView: View {
                 )
                 
                 SettingsRowView(
-                    title: "Пользавтальское соглашение",
+                    title: "Пользовательское соглашение",
                     showChevron: true) {
-                        print("Нажал")
+                        showUserAgreement = true
                     }
                     .listRowSeparator(.hidden)
             }
@@ -33,6 +36,24 @@ struct SettingsView: View {
         }
         .background(Color.ypWhite)
         .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
+        .fullScreenCover(isPresented: $showUserAgreement) {
+            NavigationStack {
+                UserAgreementView()
+                    .navigationTitle("Пользовательское соглашение")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button(action: {
+                                showUserAgreement = false
+                            }) {
+                                Image(systemName: "chevron.left")
+                                    .foregroundColor(.ypBlack)
+                                    .font(.system(size: 17, weight: .semibold))
+                            }
+                        }
+                    }
+            }
+        }
     }
 
 }
