@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @State private var isDarkMode = false
+    @EnvironmentObject var themeManager: ThemeManager
     var body: some View {
         VStack(spacing: 24) {
             List {
                 SettingsRowView(
                     title: "Темная тема",
                     showToggle: true,
-                    isOn: $isDarkMode
+                    isOn: $themeManager.isDarkMode
                 )
                 
                 SettingsRowView(
@@ -30,10 +30,12 @@ struct SettingsView: View {
             
             Spacer()
         }
+        .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
     }
 
 }
 
 #Preview {
-    TabBarView()
+    SettingsView()
+        .environmentObject(ThemeManager())
 }
