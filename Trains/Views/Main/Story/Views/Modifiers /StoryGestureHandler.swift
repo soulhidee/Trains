@@ -1,18 +1,48 @@
-//
-//  StoryGestureHandler.swift
-//  Trains
-//
-//  Created by Даниил on 27.11.2025.
-//
-
 import SwiftUI
 
-struct StoryGestureHandler: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+struct StoryGestureHandler: ViewModifier {
+    let onTap: () -> Void
+    let onSwipeLeft: () -> Void
+    let onSwipeRight: () -> Void
+    
+    @State private var dragOffset: CGFloat = 0
+    private let swipeThreshold: CGFloat = 50
+    
+    func body(content: Content) -> some View {
+        content
+            .onTapGesture {
+                onTap()
+            }
+            .gesture(
+                DragGesture(minimumDistance: 20)
+                    .onChanged { value in
+                        dragOffset = value.translation.width
+                    }
+                    .onEnded { value in
+                        let horizontalMovement = value.translation.width
+                        
+                        if horizontalMovement < -swipeThreshold {
+                            onSwipeLeft()
+                        } else if horizontalMovement > swipeThreshold {
+                            onSwipeRight()
+                        }
+                        
+                        dragOffset = 0
+                    }
+            )
     }
 }
 
-#Preview {
-    StoryGestureHandler()
+extension View {
+    func storyGestures(
+        onTap: @escaping () -> Void,
+        onSwipeLeft: @escaping () -> Void,
+        onSwipeRight: @escaping () -> Void
+    ) -> some View {
+        modifier(StoryGestureHandler(
+            onTap: onTap,
+            onSwipeLeft: onSwipeLeft,
+            onSwipeRight: onSwipeRight
+        ))
+    }
 }
