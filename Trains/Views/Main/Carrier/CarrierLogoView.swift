@@ -47,7 +47,7 @@ struct CarrierLogoView: View {
 
 #Preview {
     CarrierLogoView(
-        logoName: "rjd",
+        logoName: "RJD",
         name: "РЖД",
         transferInfo: "С пересадкой в Кастроме"
     )

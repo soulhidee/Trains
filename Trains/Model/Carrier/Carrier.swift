@@ -14,7 +14,7 @@ struct CarrierModel: Identifiable {
 extension CarrierModel {
     static let schedule: [CarrierModel] = [
         CarrierModel(
-            logoName: "rjd",
+            logoName: "RJD",
             name: "РЖД",
             transferInfo: "С пересадкой в Костроме",
             departure: "22:30",
@@ -23,7 +23,7 @@ extension CarrierModel {
             date: "14 января"
         ),
         CarrierModel(
-            logoName: "fgk",
+            logoName: "FGK",
             name: "ФГК",
             transferInfo: "",
             departure: "01:15",
@@ -32,7 +32,7 @@ extension CarrierModel {
             date: "15 января"
         ),
         CarrierModel(
-            logoName: "ural",
+            logoName: "URAL",
             name: "Урал логистика",
             transferInfo: "",
             departure: "12:30",
@@ -41,7 +41,7 @@ extension CarrierModel {
             date: "16 января"
         ),
         CarrierModel(
-            logoName: "rjd",
+            logoName: "RJD",
             name: "РЖД",
             transferInfo: "С пересадкой в Костроме",
             departure: "22:30",
@@ -50,7 +50,7 @@ extension CarrierModel {
             date: "17 января"
         ),
         CarrierModel(
-            logoName: "rjd",
+            logoName: "RJD",
             name: "РЖД",
             transferInfo: "С пересадкой в Костроме",
             departure: "00:00",
