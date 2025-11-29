@@ -1,98 +1,106 @@
-//
-//  StoryContentView.swift
-//  Trains
-//
-//  Created by Даниил on 27.11.2025.
-//
-
 import SwiftUI
 import Combine
 
 struct StoryContentView: View {
-    struct Configuration {
-        let timerTickInternal: TimeInterval
-        let progressPerTick: CGFloat
-
-        init(
-            storiesCount: Int,
-            secondsPerStory: TimeInterval = 5,
-            timerTickInternal: TimeInterval = 0.05
-        ) {
-            self.timerTickInternal = timerTickInternal
-            self.progressPerTick = 1.0 / CGFloat(storiesCount) / secondsPerStory * timerTickInternal
-        }
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var timerManager: StoryTimerManager
+    @StateObject private var navigationManager: StoryNavigationManager
+    
+    init(stories: [Story] = [.story1, .story2, .story3]) {
+        let config = StoryTimerManager.Configuration(storiesCount: stories.count)
+        _timerManager = StateObject(wrappedValue: StoryTimerManager(configuration: config))
+        _navigationManager = StateObject(wrappedValue: StoryNavigationManager(stories: stories))
     }
-
-    private let stories: [Story]
-    private let configuration: Configuration
-    private var currentStory: Story { stories[currentStoryIndex] }
-    private var currentStoryIndex: Int { Int(progress * CGFloat(stories.count)) }
-    @State private var progress: CGFloat = 0
-    @State private var timer: Timer.TimerPublisher
-    @State private var cancellable: Cancellable?
-
-    init(stories: [Story] = [ .story1, .story2, .story3 ]) {
-        self.stories = stories
-        configuration = Configuration(storiesCount: stories.count)
-        timer = Self.createTimer(configuration: configuration)
-    }
-
+    
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            StoryView(story: currentStory)
-            ProgressBar(numberOfSections: stories.count, progress: progress)
-                .padding(.init(top: 28, leading: 12, bottom: 12, trailing: 12))
-            CloseButton(action: { print("Close Story") })
+            StoryView(story: navigationManager.currentStory)
+                .storyGestures(
+                    onTap: handleTap,
+                    onSwipeLeft: handleSwipeLeft,
+                    onSwipeRight: handleSwipeRight
+                )
+            
+            VStack(spacing: 0) {
+                ProgressBar(
+                    numberOfSections: navigationManager.storiesCount,
+                    progress: combinedProgress
+                )
+                .padding(.init(top: 28, leading: 12, bottom: 0, trailing: 12))
+                
+                Spacer()
+            }
+            
+            CloseButton(action: handleClose)
                 .padding(.top, 57)
                 .padding(.trailing, 12)
         }
         .onAppear {
-            timer = Self.createTimer(configuration: configuration)
-            cancellable = timer.connect()
+            timerManager.start()
         }
         .onDisappear {
-            cancellable?.cancel()
+            timerManager.pause()
         }
-        .onReceive(timer) { _ in
-            timerTick()
-        }
-        .onTapGesture {
-            nextStory()
-            resetTimer()
+        .onChange(of: timerManager.progress) { oldValue, newValue in
+            handleProgressChange(newValue)
         }
     }
-
-    private func timerTick() {
-        var nextProgress = progress + configuration.progressPerTick
-        if nextProgress >= 1 {
-            nextProgress = 0
-        }
-        //withAnimation {
-            progress = nextProgress
-        //}
+    
+    // MARK: - Computed Properties
+    private var combinedProgress: CGFloat {
+        let storyProgress = navigationManager.progressForCurrentStory()
+        let currentStoryProgress = timerManager.progress - storyProgress
+        return storyProgress + currentStoryProgress
     }
-
-    private func nextStory() {
-        let storiesCount = stories.count
-        let currentStoryIndex = Int(progress * CGFloat(storiesCount))
-        let nextStoryIndex = currentStoryIndex + 1 < storiesCount ? currentStoryIndex + 1 : 0
+    
+    // MARK: - Handlers
+    private func handleTap() {
+        moveToNextStory()
+    }
+    
+    private func handleSwipeLeft() {
+        moveToNextStory()
+    }
+    
+    private func handleSwipeRight() {
+        moveToPreviousStory()
+    }
+    
+    private func handleClose() {
+        dismiss()
+    }
+    
+    private func handleProgressChange(_ newProgress: CGFloat) {
+        let newStoryIndex = Int(newProgress * CGFloat(navigationManager.storiesCount))
+        
+        if newStoryIndex != navigationManager.currentStoryIndex {
+            navigationManager.setStoryIndex(from: newProgress)
+        }
+        
+        if newProgress >= 1.0 {
+            timerManager.setProgress(0)
+            navigationManager.setStoryIndex(from: 0)
+        }
+    }
+    
+    // MARK: - Private Methods
+    private func moveToNextStory() {
+        navigationManager.nextStory()
+        updateTimerForCurrentStory()
+    }
+    
+    private func moveToPreviousStory() {
+        navigationManager.previousStory()
+        updateTimerForCurrentStory()
+    }
+    
+    private func updateTimerForCurrentStory() {
         withAnimation {
-            progress = CGFloat(nextStoryIndex) / CGFloat(storiesCount)
+            timerManager.setProgress(navigationManager.progressForCurrentStory())
         }
-    }
-
-    private func resetTimer() {
-        cancellable?.cancel()
-        timer = Self.createTimer(configuration: configuration)
-        cancellable = timer.connect()
-    }
-
-    // Создание таймера (используется в 2х местах)
-    private static func createTimer(configuration: Configuration) -> Timer.TimerPublisher {
-        Timer.publish(every: configuration.timerTickInternal, on: .main, in: .common)
+        timerManager.reset()
     }
 }
-
 
 #Preview {
     StoryContentView()
