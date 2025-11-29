@@ -3,6 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     // MARK: - Properties
     @EnvironmentObject var themeManager: ThemeManager
+    @State private var isDarkMode: Bool = false
     @State private var showUserAgreement = false
     
     // MARK: - Body
@@ -21,6 +22,9 @@ struct SettingsView: View {
         .fullScreenCover(isPresented: $showUserAgreement) {
             userAgreementFullScreen
         }
+        .onAppear {
+            isDarkMode = themeManager.isDarkMode
+        }
     }
     
     // MARK: - Subviews
@@ -29,7 +33,13 @@ struct SettingsView: View {
             SettingsRowView(
                 title: "Темная тема",
                 showToggle: true,
-                isOn: $themeManager.isDarkMode
+                isOn: Binding(
+                    get: { isDarkMode },
+                    set: { newValue in
+                        isDarkMode = newValue
+                        themeManager.isDarkMode = newValue
+                    }
+                )
             )
             
             SettingsRowView(

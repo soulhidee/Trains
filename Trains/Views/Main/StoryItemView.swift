@@ -1,10 +1,3 @@
-//
-//  StoryItemView.swift
-//  Trains
-//
-//  Created by Даниил on 29.11.2025.
-//
-
 import SwiftUI
 
 struct StoryItemView: View {
@@ -31,18 +24,13 @@ struct StoryItemView: View {
                     .padding(.bottom, 12)
             }
             .frame(width: 92, height: 140)
-            
         }
+        .frame(width: 92, height: 140)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(isViewed ? Color.clear : Color.ypBlue, lineWidth: 4)
         )
-    }
-}
-
-extension Story {
-    var id: String {
-        title
     }
 }
 

@@ -6,17 +6,13 @@ struct StoryContentView: View {
     @StateObject private var timerManager: StoryTimerManager
     @StateObject private var navigationManager: StoryNavigationManager
     
-    // MARK: - Computed Properties
-    private var combinedProgress: CGFloat {
-        let storyProgress = navigationManager.progressForCurrentStory()
-        let currentStoryProgress = timerManager.progress - storyProgress
-        return storyProgress + currentStoryProgress
-    }
+    let onStoryViewed: ((Int) -> Void)?
     
-    init(stories: [Story] = [.story1, .story2, .story3]) {
+    init(stories: [Story] = [.story1, .story2, .story3], startIndex: Int = 0, onStoryViewed: ((Int) -> Void)? = nil) {
         let config = StoryTimerManager.Configuration(storiesCount: stories.count)
         _timerManager = StateObject(wrappedValue: StoryTimerManager(configuration: config))
-        _navigationManager = StateObject(wrappedValue: StoryNavigationManager(stories: stories))
+        _navigationManager = StateObject(wrappedValue: StoryNavigationManager(stories: stories, startIndex: startIndex))
+        self.onStoryViewed = onStoryViewed
     }
     
     var body: some View {
@@ -43,19 +39,29 @@ struct StoryContentView: View {
                 .padding(.trailing, 12)
         }
         .onAppear {
+            let initialProgress = navigationManager.progressForCurrentStory()
+            timerManager.setProgress(initialProgress)
             timerManager.start()
+            
+            onStoryViewed?(navigationManager.currentStoryIndex)
         }
         .onDisappear {
             timerManager.pause()
         }
-        .onChange(of: timerManager.progress) { oldValue, newValue in
+        .onChange(of: timerManager.progress) { _, newValue in
             handleProgressChange(newValue)
+        }
+        .onChange(of: navigationManager.currentStoryIndex) { _, newIndex in
+            onStoryViewed?(newIndex)
         }
     }
     
-   
+    private var combinedProgress: CGFloat {
+        let storyProgress = navigationManager.progressForCurrentStory()
+        let currentStoryProgress = timerManager.progress - storyProgress
+        return storyProgress + currentStoryProgress
+    }
     
-    // MARK: - Handlers
     private func handleTap() {
         moveToNextStory()
     }
@@ -72,20 +78,19 @@ struct StoryContentView: View {
         dismiss()
     }
     
-    private func handleProgressChange(_ newProgress: CGFloat) {
-        let newStoryIndex = Int(newProgress * CGFloat(navigationManager.storiesCount))
+    private func handleProgressChange(_ newValue: CGFloat) {
+        let newStoryIndex = Int(newValue * CGFloat(navigationManager.storiesCount))
         
-        if newStoryIndex != navigationManager.currentStoryIndex {
-            navigationManager.setStoryIndex(from: newProgress)
+        if newStoryIndex != navigationManager.currentStoryIndex
+            && newStoryIndex < navigationManager.storiesCount {
+            navigationManager.setStoryIndex(from: newValue)
         }
         
-        if newProgress >= 1.0 {
-            timerManager.setProgress(0)
-            navigationManager.setStoryIndex(from: 0)
+        if newValue >= 1.0 {
+            dismiss()
         }
     }
     
-    // MARK: - Private Methods
     private func moveToNextStory() {
         navigationManager.nextStory()
         updateTimerForCurrentStory()
@@ -97,9 +102,8 @@ struct StoryContentView: View {
     }
     
     private func updateTimerForCurrentStory() {
-        withAnimation {
-            timerManager.setProgress(navigationManager.progressForCurrentStory())
-        }
+        let newProgress = navigationManager.progressForCurrentStory()
+        timerManager.setProgress(newProgress)
         timerManager.reset()
     }
 }

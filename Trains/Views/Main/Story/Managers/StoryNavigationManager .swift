@@ -2,7 +2,7 @@ import Foundation
 import Combine
 
 final class StoryNavigationManager: ObservableObject {
-    @Published private(set) var currentStoryIndex: Int = 0
+    @Published private(set) var currentStoryIndex: Int
     
     private let stories: [Story]
     
@@ -14,9 +14,10 @@ final class StoryNavigationManager: ObservableObject {
         stories.count
     }
     
-    init(stories: [Story]) {
-        self.stories = stories
-    }
+    init(stories: [Story], startIndex: Int = 0) {
+           self.stories = stories
+           self.currentStoryIndex = min(max(startIndex, 0), stories.count - 1)
+       }
     
     func nextStory() {
         if currentStoryIndex + 1 < stories.count {
