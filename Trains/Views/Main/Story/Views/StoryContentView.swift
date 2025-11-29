@@ -6,6 +6,13 @@ struct StoryContentView: View {
     @StateObject private var timerManager: StoryTimerManager
     @StateObject private var navigationManager: StoryNavigationManager
     
+    // MARK: - Computed Properties
+    private var combinedProgress: CGFloat {
+        let storyProgress = navigationManager.progressForCurrentStory()
+        let currentStoryProgress = timerManager.progress - storyProgress
+        return storyProgress + currentStoryProgress
+    }
+    
     init(stories: [Story] = [.story1, .story2, .story3]) {
         let config = StoryTimerManager.Configuration(storiesCount: stories.count)
         _timerManager = StateObject(wrappedValue: StoryTimerManager(configuration: config))
@@ -46,12 +53,7 @@ struct StoryContentView: View {
         }
     }
     
-    // MARK: - Computed Properties
-    private var combinedProgress: CGFloat {
-        let storyProgress = navigationManager.progressForCurrentStory()
-        let currentStoryProgress = timerManager.progress - storyProgress
-        return storyProgress + currentStoryProgress
-    }
+   
     
     // MARK: - Handlers
     private func handleTap() {
