@@ -27,6 +27,7 @@ struct ContactRowView: View {
         .padding(.vertical, 12)
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets())
+        .background(.ypWhite)
     }
 }
 

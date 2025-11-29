@@ -42,6 +42,7 @@ struct CarrierCardView: View {
             .resizable()
             .frame(maxWidth: .infinity, maxHeight: Constants.logoHeight)
             .padding(.vertical, Constants.verticalPadding)
+            .padding(.horizontal, Constants.horizontalPadding)
             
     }
     

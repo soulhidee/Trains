@@ -36,5 +36,9 @@ struct StoryItemView: View {
 }
 
 #Preview {
-    StoryItemView(story: Story.story4, isViewed: true)
+    HStack(spacing: 12) {
+        StoryItemView(story: Story.story4, isViewed: true)
+        
+        StoryItemView(story: Story.story5, isViewed: false)
+    }
 }
