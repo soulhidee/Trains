@@ -15,9 +15,9 @@ final class StoryNavigationManager: ObservableObject {
     }
     
     init(stories: [Story], startIndex: Int = 0) {
-           self.stories = stories
-           self.currentStoryIndex = min(max(startIndex, 0), stories.count - 1)
-       }
+        self.stories = stories
+        self.currentStoryIndex = min(max(startIndex, 0), stories.count - 1)
+    }
     
     func nextStory() {
         if currentStoryIndex + 1 < stories.count {

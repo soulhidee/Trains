@@ -8,7 +8,7 @@ struct Story: Identifiable {
     let title: String
     let description: String
     
-
+    
     static let story1 = Story(
         backgroundImage: Image(.story1),
         title: "Text Text Text Text Text Text Text Text Text Text",
@@ -26,7 +26,7 @@ struct Story: Identifiable {
         title: "Text Text Text Text Text Text Text Text Text Text",
         description: "Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text"
     )
-
+    
     static let story4 = Story(
         backgroundImage: Image(.story4),
         title: "Text Text Text Text Text Text Text Text Text Text",
@@ -38,5 +38,5 @@ struct Story: Identifiable {
         title: "Text Text Text Text Text Text Text Text Text Text",
         description: "Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text Text"
     )
-
+    
 }

@@ -1,10 +1,3 @@
-//
-//  SettingsRowView.swift
-//  Trains
-//
-//  Created by Даниил on 23.11.2025.
-//
-
 import SwiftUI
 
 struct SettingsRowView: View {

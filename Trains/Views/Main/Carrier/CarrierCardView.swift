@@ -43,7 +43,7 @@ struct CarrierCardView: View {
             .frame(maxWidth: .infinity, maxHeight: Constants.logoHeight)
             .padding(.vertical, Constants.verticalPadding)
             .padding(.horizontal, Constants.horizontalPadding)
-            
+        
     }
     
     private var contentView: some View {

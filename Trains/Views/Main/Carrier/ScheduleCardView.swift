@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ScheduleCardView: View {
     let schedule: CarrierModel
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             carrierInfoSection
@@ -18,10 +18,10 @@ struct ScheduleCardView: View {
         .padding(14)
         .background(Color(.ypLightGray))
         .cornerRadius(24)
-  
-
+        
+        
     }
-
+    
     private var carrierInfoSection: some View {
         HStack {
             CarrierLogoView(logoName: schedule.logoName,
