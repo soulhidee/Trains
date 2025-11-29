@@ -17,6 +17,7 @@ struct SettingsView: View {
             
             Spacer()
         }
+        .padding(.top, 24)
         .background(Color.ypWhite)
         .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
         .fullScreenCover(isPresented: $showUserAgreement) {
