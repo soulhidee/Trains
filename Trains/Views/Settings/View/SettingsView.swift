@@ -79,8 +79,8 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Preview
-#Preview {
-    SettingsView()
-        .environmentObject(ThemeManager())
-}
+//// MARK: - Preview
+//#Preview {
+//    SettingsView()
+//        .environmentObject(ThemeManager())
+//}
