@@ -1,10 +1,9 @@
 import SwiftUI
 
 struct SettingsView: View {
+    
     // MARK: - Properties
-    @EnvironmentObject var themeManager: ThemeManager
-    @State private var isDarkMode: Bool = false
-    @State private var showUserAgreement = false
+    @State private var viewModel = SettingsViewModel()
     
     // MARK: - Body
     var body: some View {
@@ -19,12 +18,8 @@ struct SettingsView: View {
         }
         .padding(.top, 24)
         .background(Color.ypWhite)
-        .preferredColorScheme(themeManager.isDarkMode ? .dark : .light)
-        .fullScreenCover(isPresented: $showUserAgreement) {
+        .fullScreenCover(isPresented: $viewModel.showUserAgreement) {
             userAgreementFullScreen
-        }
-        .onAppear {
-            isDarkMode = themeManager.isDarkMode
         }
     }
     
@@ -34,22 +29,17 @@ struct SettingsView: View {
             SettingsRowView(
                 title: "Темная тема",
                 showToggle: true,
-                isOn: Binding(
-                    get: { isDarkMode },
-                    set: { newValue in
-                        isDarkMode = newValue
-                        themeManager.isDarkMode = newValue
-                    }
-                )
+                isOn: $viewModel.isDarkMode
             )
             
             SettingsRowView(
                 title: "Пользовательское соглашение",
-                showChevron: true) {
-                    showUserAgreement = true
-                }
-                .listRowSeparator(.hidden)
-                .buttonStyle(.plain)
+                showChevron: true
+            ) {
+                viewModel.openUserAgreement()
+            }
+            .listRowSeparator(.hidden)
+            .buttonStyle(.plain)
         }
         .listStyle(.plain)
         .listRowSeparator(.hidden)
@@ -67,7 +57,7 @@ struct SettingsView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigationBarLeading) {
                         Button(action: {
-                            showUserAgreement = false
+                            viewModel.closeUserAgreement()
                         }) {
                             Image(systemName: "chevron.left")
                                 .foregroundColor(.ypBlack)
@@ -79,8 +69,7 @@ struct SettingsView: View {
     }
 }
 
-//// MARK: - Preview
-//#Preview {
-//    SettingsView()
-//        .environmentObject(ThemeManager())
-//}
+// MARK: - Preview
+#Preview {
+    SettingsView()
+}

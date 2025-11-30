@@ -1,32 +1,22 @@
-import Foundation
+import Observation
 
 @Observable
-class SettingsViewModel {
+final class SettingsViewModel {
     
     // MARK: - Properties
-    private(set) var settingsModel: SettingsModel
+    private let appearanceManager: AppearanceManager
+    
+    var isDarkMode: Bool {
+            get { appearanceManager.isDarkMode }
+            set { appearanceManager.isDarkMode = newValue }
+        }
+    
     var showUserAgreement: Bool = false
     
-    
-    // MARK: - Computed Property
-    var isDarkMode: Bool {
-        get {
-            settingsModel.isDarkModeEnabled
-        }
-        set {
-            settingsModel.isDarkModeEnabled = newValue
-            saveSettings()
-        }
-    }
-    
     // MARK: - Initialization
-    init() {
-        if let savedSettings = UserDefaultsService.shared.loadSettings() {
-            self.settingsModel = savedSettings
-        } else {
-            self.settingsModel = .initialValue
+    init(appearanceManager: AppearanceManager = .shared) {
+            self.appearanceManager = appearanceManager
         }
-    }
     
     // MARK: - Public Methods
     func openUserAgreement() {
@@ -36,9 +26,5 @@ class SettingsViewModel {
     func closeUserAgreement() {
         showUserAgreement = false
     }
-    
-    // MARK: - Private Methods
-    private func saveSettings() {
-        UserDefaultsService.shared.saveSettings(settingsModel)
-    }
+
 }

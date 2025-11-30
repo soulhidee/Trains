@@ -9,12 +9,13 @@ import SwiftUI
 
 @main
 struct TrainsApp: App {
-    @StateObject private var themeManager = ThemeManager()
+    @State private var appearanceManager = AppearanceManager.shared
     var body: some Scene {
         WindowGroup {
             SplashView()
-                .environmentObject(themeManager)
-                .preferredColorScheme(themeManager.colorScheme)
+                .preferredColorScheme(
+                    appearanceManager.isDarkMode ? .dark : .light
+                )
         }
     }
 }
