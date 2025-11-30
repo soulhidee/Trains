@@ -1,10 +1,3 @@
-//
-//  CarrierLogoView.swift
-//  Trains
-//
-//  Created by Даниил on 17.11.2025.
-//
-
 import SwiftUI
 
 struct CarrierLogoView: View {
@@ -47,7 +40,7 @@ struct CarrierLogoView: View {
 
 #Preview {
     CarrierLogoView(
-        logoName: "rjd",
+        logoName: "RJD",
         name: "РЖД",
         transferInfo: "С пересадкой в Кастроме"
     )

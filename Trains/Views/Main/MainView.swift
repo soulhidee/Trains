@@ -13,6 +13,9 @@ struct MainView: View {
     
     var body: some View {
         VStack(spacing: 16) {
+            StoryCollectionView()
+                .padding(.top)
+            
             LocationSwapView(
                 fromCity: $fromCity,
                 fromStation: $fromStation,
@@ -46,5 +49,5 @@ struct MainView: View {
 }
 
 #Preview {
-    TabBarView()
+    MainView()
 }
