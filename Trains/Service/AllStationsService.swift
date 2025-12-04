@@ -1,10 +1,3 @@
-//
-//  AllStationsService.swift
-//  Travel Schedule
-//
-//  Created by Ульта on 30.09.2025.
-//
-
 import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
