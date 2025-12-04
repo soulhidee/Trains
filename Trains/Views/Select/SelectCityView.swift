@@ -3,24 +3,34 @@ import SwiftUI
 struct SelectCityView: View {
     let onSelect: (String) -> Void
     @Environment(\.dismiss) private var dismiss
-    private let cities = [
-        "Москва",
-        "Санкт Петербург",
-        "Сочи",
-        "Горный воздух",
-        "Краснодар",
-        "Казань",
-        "Омск",
-    ]
+    @StateObject private var viewModel = SelectCityViewModel()
     
     var body: some View {
-        SelectionListView(
-            title: "Выбор города",
-            searchPrompt: "Введите запрос",
-            emptyMassage: "Город не найден",
-            items: cities,
-            onSelect: onSelect
-        )
+        ZStack {
+            if viewModel.isLoading {
+                VStack(spacing: 16) {
+                    Spacer()
+                    ProgressView()
+                    Text("Загрузка городов...")
+                        .font(. system(size: 14, weight: .regular))
+                        .foregroundColor(.ypGray)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                . background(Color.ypWhite)
+            } else {
+                SelectionListView(
+                    title: "Выбор города",
+                    searchPrompt: "Введите запрос",
+                    emptyMassage: "Город не найден",
+                    items: viewModel.filteredCities.map { $0.title },
+                    onSelect: onSelect
+                )
+            }
+        }
+        .task {
+            await viewModel.loadCities()
+        }
     }
 }
 

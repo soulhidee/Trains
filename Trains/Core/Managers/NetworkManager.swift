@@ -14,7 +14,7 @@ actor NetworkManager {
     
     private init() {
         let client = Client(
-            serverURL: URL(string: "https://api. rasp.yandex.net") ?? {
+            serverURL: URL(string: "https://api.rasp.yandex.net") ?? {
                 fatalError("Критическая ошибка: невалидный базовый URL API Яндекс. Расписаний")
             }(),
             transport: URLSessionTransport()

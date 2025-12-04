@@ -4,6 +4,12 @@ struct DirectoryCity: Hashable, Sendable {
     let title: String
 }
 
+extension String {
+    var containsRussianLetters: Bool {
+        range(of: "[А-Яа-яЁё]", options: .regularExpression) != nil
+    }
+}
+
 actor DirectoryService {
     private let apikey: String
     private var cachedCities: [DirectoryCity]?
@@ -29,7 +35,9 @@ actor DirectoryService {
                 for region in regions {
                     let settlements = region["settlements"] as? [[String: Any]] ?? []
                     for settlement in settlements {
-                        if let title = settlement["title"] as? String, !title.isEmpty {
+                        if let title = settlement["title"] as? String,
+                           !title.isEmpty,
+                           title.containsRussianLetters {
                             cities.insert(title)
                         }
                     }
@@ -47,7 +55,7 @@ actor DirectoryService {
     }
 
     private func makeURL() throws -> URL {
-        var components = URLComponents(string: "https://api.rasp.yandex.net/v3. 0/stations_list/")!
+        var components = URLComponents(string: "https://api.rasp.yandex.net/v3.0/stations_list/")!
         components.queryItems = [
             URLQueryItem(name: "apikey", value: apikey),
             URLQueryItem(name: "format", value: "json"),
