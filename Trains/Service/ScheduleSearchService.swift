@@ -5,7 +5,6 @@ import OpenAPIURLSession
 // MARK: - Typealiases
 typealias ScheduleSearch = Components.Schemas.Segments
 
-
 // MARK: - Protocol
 protocol ScheduleSearchServiceProtocol {
     func getScheduleBetweenStations(
