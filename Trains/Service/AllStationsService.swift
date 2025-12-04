@@ -1,40 +1,51 @@
-import OpenAPIRuntime
+//
+//  AllStationsService.swift
+//  Travel Schedule
+//
+//  Created by Ульта on 30.09.2025.
+//
+
 import Foundation
+import OpenAPIRuntime
 import OpenAPIURLSession
 
-// MARK: - Typealiases
-typealias AllStations = Components.Schemas.AllStationsResponse
-
-// MARK: - Protocol
 protocol AllStationsServiceProtocol {
-    func getAllStations(limit: Int?) async throws -> AllStations
+    func getAllStations(
+        apikey: String,
+        lang: String?,
+        format: String?
+    ) async throws -> String
 }
 
-// MARK: - Service Implementation
 final class AllStationsService: AllStationsServiceProtocol {
-    
-    // MARK: - Private Properties
     private let client: Client
-    private let apiKey: String
     
-    // MARK: - Initialization
-    init(client: Client, apiKey: String) {
+    init(client: Client) {
         self.client = client
-        self.apiKey = apiKey
     }
     
-    // MARK: - Public Methods
-    func getAllStations(limit: Int? = nil) async throws -> AllStations {
-        let response = try await client.getAllStations(query: .init(apikey: apiKey))
-        
-        let responseBody = try response.ok.body.html
-        
-        let limit = 50 * 1024 * 1024
-        var fullData = try await Data(collecting: responseBody, upTo: limit)
-        
-        let allStations = try JSONDecoder().decode(AllStations.self, from: fullData)
-        
-        return allStations
+    func getAllStations(
+        apikey: String,
+        lang: String? = nil,
+        format: String? = nil
+    ) async throws -> String {
+        let output = try await client.getAllStations(query: .init(
+            apikey: apikey,
+            lang: lang,
+            format: format
+        ))
+        switch output {
+        case .ok(let ok):
+            switch ok.body {
+            case .html(let body):
+                var collected = Data()
+                for try await chunk in body {
+                    collected.append(contentsOf: chunk)
+                }
+                return String(data: collected, encoding: .utf8) ?? ""
+            }
+        default:
+            throw NSError(domain: "AllStationsService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Non-200 response"])
+        }
     }
 }
-

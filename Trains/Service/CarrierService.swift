@@ -2,31 +2,39 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 
 // MARK: - Typealiases
-typealias Carrier = Components.Schemas.CarrierResponse
+typealias CarrierResponse = Components.Schemas.CarrierResponse
 
 // MARK: - Protocol
 protocol CarrierServiceProtocol {
-    func getCarrierInfo(code: String, system: String?) async throws -> Carrier
+    func getCarrierInfo(
+        apikey: String,
+        code: String,
+        system: String?,
+        lang: String?,
+        format: String?
+    ) async throws -> CarrierResponse
 }
 
 final class CarrierService: CarrierServiceProtocol {
-    // MARK: - Private Properties
     private let client: Client
-    private let apiKey: String
     
-    // MARK: - Initialization
-    init(client: Client, apiKey: String) {
+    init(client: Client) {
         self.client = client
-        self.apiKey = apiKey
     }
     
-    // MARK: - Public Methods
-    func getCarrierInfo(code: String, system: String? = nil) async throws -> Carrier {
+    func getCarrierInfo(
+        apikey: String,
+        code: String,
+        system: String? = nil,
+        lang: String? = nil,
+        format: String? = nil
+    ) async throws -> CarrierResponse {
         let response = try await client.getCarrierInfo(query: .init(
-            apikey: apiKey,
+            apikey: apikey,
             code: code,
-            system: system
-            
+            system: system,
+            lang: lang,
+            format: format
         ))
         return try response.ok.body.json
     }
