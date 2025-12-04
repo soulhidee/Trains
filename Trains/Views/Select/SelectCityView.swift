@@ -6,26 +6,23 @@ struct SelectCityView: View {
     @StateObject private var viewModel = SelectCityViewModel()
     
     var body: some View {
-        ZStack {
-            if viewModel.isLoading {
+        SelectionListView(
+            title: "Выбор города",
+            searchPrompt: "Введите запрос",
+            emptyMassage: viewModel.isLoading ? "Загрузка..." : "Город не найден",
+            items: viewModel.filteredCities.map { $0.title },
+            onSelect: onSelect
+        )
+        .overlay {
+            if viewModel.isLoading && viewModel.cities.isEmpty {
                 VStack(spacing: 16) {
-                    Spacer()
                     ProgressView()
                     Text("Загрузка городов...")
-                        .font(. system(size: 14, weight: .regular))
+                        .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.ypGray)
-                    Spacer()
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                . background(Color.ypWhite)
-            } else {
-                SelectionListView(
-                    title: "Выбор города",
-                    searchPrompt: "Введите запрос",
-                    emptyMassage: "Город не найден",
-                    items: viewModel.filteredCities.map { $0.title },
-                    onSelect: onSelect
-                )
+                .background(Color.ypWhite.opacity(0.9))
             }
         }
         .task {

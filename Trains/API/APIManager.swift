@@ -1,6 +1,6 @@
 import SwiftKeychainWrapper
 
-class APIKeyManager {
+final class APIKeyManager: Sendable {
     static let shared = APIKeyManager()
     private let keychainKey = "apiKey"
     

@@ -1,7 +1,7 @@
 import SwiftUI
 
 @Observable
-final class AppearanceManager {
+final class AppearanceManager: Sendable {
     static let shared = AppearanceManager()
     
     private init() {

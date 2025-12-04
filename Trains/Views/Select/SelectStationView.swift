@@ -1,45 +1,38 @@
-//
-//  SelectStationView.swift
-//  Trains
-//
-//  Created by Даниил on 12.11.2025.
-//
-
 import SwiftUI
 
 struct SelectStationView: View {
-    let cityName: String
     let onSelect: (String) -> Void
     @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel: SelectStationViewModel
     
-    private var stations: [String] {
-        if cityName == "Москва" {
-            return [
-                "Киевский вокзал",
-                "Курский вокзал",
-                "Ярославский вокзал",
-                "Белорусский вокзал",
-                "Савеловский вокзал",
-                "Ленинградский вокзал"
-            ]
-        } else if cityName == "Санкт Петербург" {
-            return [
-                "Московский вокзал",
-                "Витебский вокзал",
-                "Финляндский вокзал",
-                "Балтийский вокзал",
-            ]
-        } else {
-            return ["\(cityName) вокзал"]
-        }
+    init(cityName: String, onSelect: @escaping (String) -> Void) {
+        self.onSelect = onSelect
+        _viewModel = StateObject(wrappedValue: SelectStationViewModel(cityName: cityName))
     }
     
     var body: some View {
-        SelectionListView(title: "Выбор станции",
-                          searchPrompt: "Введите запрос",
-                          emptyMassage: "Станция не найдена",
-                          items: stations,
-                          onSelect: onSelect)
+        SelectionListView(
+            title: "Выбор станции",
+            searchPrompt: "Введите запрос",
+            emptyMassage: viewModel.isLoading ? "Загрузка..." : "Станция не найдена",
+            items: viewModel.filteredStations.map { $0.title },
+            onSelect: onSelect
+        )
+        .overlay {
+            if viewModel.isLoading && viewModel.stations.isEmpty {
+                VStack(spacing: 16) {
+                    ProgressView()
+                    Text("Загрузка станций...")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.ypGray)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.ypWhite.opacity(0.9))
+            }
+        }
+        .task {
+            await viewModel.loadStations()
+        }
     }
 }
 

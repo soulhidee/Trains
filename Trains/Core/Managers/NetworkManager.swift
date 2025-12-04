@@ -73,6 +73,11 @@ actor NetworkManager {
     func getAllCities() async throws -> [DirectoryCity] {
         try await directoryService.fetchAllCities()
     }
+    
+    // MARK: - Directory (Stations)
+    func getStations(for cityTitle: String) async throws -> [DirectoryStation] {
+        try await directoryService.fetchStations(inCityTitle: cityTitle)
+    }
 }
 
 // MARK: - Helper
