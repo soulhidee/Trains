@@ -10,11 +10,12 @@ actor NetworkManager {
     private let searchService: ScheduleSearchService
     private let carrierService: CarrierService
     private let allStationService: AllStationsService
+    private let directoryService: DirectoryService
     
     private init() {
         let client = Client(
-            serverURL: URL(string: "https://api.rasp.yandex.net") ?? {
-                fatalError("Критическая ошибка: невалидный базовый URL API Яндекс.Расписаний")
+            serverURL: URL(string: "https://api. rasp.yandex.net") ?? {
+                fatalError("Критическая ошибка: невалидный базовый URL API Яндекс. Расписаний")
             }(),
             transport: URLSessionTransport()
         )
@@ -23,15 +24,16 @@ actor NetworkManager {
         self.carrierService = CarrierService(client: client)
         self.allStationService = AllStationsService(client: client)
         self.searchService = ScheduleSearchService(client: client, apiKey: Secrets.apiKey)
+        self.directoryService = DirectoryService(apikey: Secrets.apiKey)
     }
     
     // MARK: - Search
     func getSegments(
         from: String,
         to: String,
-        date: String? = nil,
+        date: String?  = nil,
         transport_types: String? = nil,
-        limit: Int? = nil,
+        limit: Int?  = nil,
         offset: Int? = nil
     ) async throws -> Components.Schemas.Segments {
         try await searchService.getScheduleBetweenStations(
@@ -46,7 +48,7 @@ actor NetworkManager {
     // MARK: - Carrier
     func getCarrierInfo(
         code: String,
-        system: String? = nil
+        system: String?  = nil
     ) async throws -> CarrierResponse {
         try await carrierService.getCarrierInfo(
             apikey: Secrets.apiKey,
@@ -57,7 +59,7 @@ actor NetworkManager {
     
     // MARK: - Raw HTML
     func getAllStationsRawHTML(
-        lang: String? = nil,
+        lang: String?  = nil,
         format: String? = nil
     ) async throws -> String {
         try await allStationService.getAllStations(
@@ -65,6 +67,11 @@ actor NetworkManager {
             lang: lang,
             format: format
         )
+    }
+    
+    // MARK: - Directory (Cities)
+    func getAllCities() async throws -> [DirectoryCity] {
+        try await directoryService.fetchAllCities()
     }
 }
 
