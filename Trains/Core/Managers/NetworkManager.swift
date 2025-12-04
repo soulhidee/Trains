@@ -5,7 +5,7 @@ import OpenAPIURLSession
 @globalActor
 actor NetworkManager {
     static let shared = NetworkManager()
-
+    
     private let client: Client
     private let searchService: ScheduleSearchService
     private let carrierService: CarrierService
@@ -24,7 +24,7 @@ actor NetworkManager {
         self.allStationService = AllStationsService(client: client)
         self.searchService = ScheduleSearchService(client: client, apiKey: Secrets.apiKey)
     }
-
+    
     // MARK: - Search
     func getSegments(
         from: String,
@@ -42,7 +42,7 @@ actor NetworkManager {
             limit: limit
         )
     }
-
+    
     // MARK: - Carrier
     func getCarrierInfo(
         code: String,
@@ -54,7 +54,7 @@ actor NetworkManager {
             system: system
         )
     }
-
+    
     // MARK: - Raw HTML
     func getAllStationsRawHTML(
         lang: String? = nil,
