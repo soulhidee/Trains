@@ -86,13 +86,15 @@ actor APIClient {
     }
     
     // MARK: - Directory (Cities)
-    func getAllCities() async throws -> [DirectoryCity] {
-        try await directoryService.fetchAllCities()
+    func fetchAllCities(apikey: String) async throws -> [DirectoryCity] {
+        let directory = DirectoryService(apikey: apikey)
+        return try await directory.fetchAllCities()
     }
     
     // MARK: - Directory (Stations)
-    func getStations(for cityTitle: String) async throws -> [DirectoryStation] {
-        try await directoryService.fetchStations(inCityTitle: cityTitle)
+    func fetchStations(inCityTitle cityTitle: String, apikey: String) async throws -> [DirectoryStation] {
+        let directory = DirectoryService(apikey: apikey)
+        return try await directory.fetchStations(inCityTitle: cityTitle)
     }
 }
 

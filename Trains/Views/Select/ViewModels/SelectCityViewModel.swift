@@ -22,7 +22,7 @@ final class SelectCityViewModel: ObservableObject {
         }
         
         do {
-            let fetchedCities = try await APIClient.shared.getAllCities()
+            let fetchedCities = try await APIClient.shared.fetchAllCities(apikey: Secrets.apiKey)
             await MainActor.run {
                 self.cities = fetchedCities
                 self.isLoading = false

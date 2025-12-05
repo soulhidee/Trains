@@ -28,7 +28,7 @@ final class SelectStationViewModel: ObservableObject {
         }
         
         do {
-            let fetchedStations = try await APIClient.shared.getStations(for: cityName)
+            let fetchedStations = try await APIClient.shared.fetchStations(inCityTitle: cityName, apikey: Secrets.apiKey)
             await MainActor.run {
                 self.stations = fetchedStations
                 self.isLoading = false

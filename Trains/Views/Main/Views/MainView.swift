@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MainView: View {
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = MainViewModel()
     
     var body: some View {
@@ -25,15 +26,19 @@ struct MainView: View {
             }
             
             Spacer()
+            
         }
         .background(Color.ypWhite)
         .fullScreenCover(isPresented: $viewModel.showCarrierList) {
             NavigationStack {
-                CarrierListView(
+                CarrierView(
                     fromCity: viewModel.fromCity,
-                    toCity: viewModel.toCity,
                     fromStation: viewModel.fromStation,
-                    toStation: viewModel.toStation
+                    toCity: viewModel.toCity,
+                    toStation: viewModel.toStation,
+                    onBack: { dismiss() },
+                    onServerError: nil,
+                    onNoInternet: nil
                 )
             }
         }
