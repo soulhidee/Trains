@@ -2,12 +2,7 @@ import SwiftUI
 
 struct FilterView: View {
     @Environment(\.dismiss) private var dismiss
-    @Binding var selectedTimes: Set<DepartureTime>
-    @Binding var showTransfers: Bool?
-    
-    private var hasAnySelection: Bool {
-        !selectedTimes.isEmpty || showTransfers != nil
-    }
+    @StateObject private var viewModel = FilterViewModel()
     
     private var sections: [FilterSection] {
         [
@@ -18,14 +13,10 @@ struct FilterView: View {
                     FilterItem(
                         id: time.rawValue,
                         title: time.title,
-                        isSelected: selectedTimes.contains(time),
+                        isSelected: viewModel.selectedTimes.contains(time),
                         selectionType: .checkbox,
                         action: {
-                            if selectedTimes.contains(time) {
-                                selectedTimes.remove(time)
-                            } else {
-                                selectedTimes.insert(time)
-                            }
+                            viewModel.toggleTimeSlot(time)
                         }
                     )
                 }
@@ -37,14 +28,10 @@ struct FilterView: View {
                     FilterItem(
                         id: option == .yes ? "yes" : "no",
                         title: option.title,
-                        isSelected: showTransfers == option.boolValue,
+                        isSelected: viewModel.showTransfers == option.boolValue,
                         selectionType: .radio,
                         action: {
-                            if showTransfers == option.boolValue {
-                                showTransfers = nil
-                            } else {
-                                showTransfers = option.boolValue
-                            }
+                            viewModel.toggleTransfers(option.boolValue)
                         }
                     )
                 }
@@ -78,9 +65,9 @@ struct FilterView: View {
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, 60)
             
-            
-            if hasAnySelection {
+            if viewModel.hasAnySelection {
                 PrimaryButton(title: "Применить", action: {
+                    viewModel.applyFilters()
                     dismiss()
                 })
                 .padding()
@@ -103,10 +90,7 @@ struct FilterView: View {
 }
 
 #Preview {
-    @Previewable @State var selectedTimes: Set<DepartureTime> = []
-    @Previewable @State var showTransfers: Bool? = nil
-    
     NavigationStack {
-        FilterView(selectedTimes: $selectedTimes, showTransfers: $showTransfers)
+        FilterView()
     }
 }
