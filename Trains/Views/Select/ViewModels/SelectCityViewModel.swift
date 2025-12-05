@@ -22,7 +22,7 @@ final class SelectCityViewModel: ObservableObject {
         }
         
         do {
-            let fetchedCities = try await NetworkManager.shared.getAllCities()
+            let fetchedCities = try await APIClient.shared.getAllCities()
             await MainActor.run {
                 self.cities = fetchedCities
                 self.isLoading = false

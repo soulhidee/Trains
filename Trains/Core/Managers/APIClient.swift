@@ -3,11 +3,11 @@ import OpenAPIRuntime
 import OpenAPIURLSession
 
 @globalActor
-actor NetworkManager {
-    static let shared = NetworkManager()
+actor APIClient {
+    static let shared = APIClient()
     
     private let client: Client
-    private let searchService: ScheduleSearchService
+    private let searchService: SearchService
     private let carrierService: CarrierService
     private let allStationService: AllStationsService
     private let directoryService: DirectoryService
@@ -23,37 +23,53 @@ actor NetworkManager {
         self.client = client
         self.carrierService = CarrierService(client: client)
         self.allStationService = AllStationsService(client: client)
-        self.searchService = ScheduleSearchService(client: client, apiKey: Secrets.apiKey)
+        self.searchService = SearchService(client: client)
         self.directoryService = DirectoryService(apikey: Secrets.apiKey)
     }
     
     // MARK: - Search
     func getSegments(
+        apikey: String,
         from: String,
         to: String,
-        date: String?  = nil,
+        format: String? = nil,
+        lang: String? = nil,
+        date: String? = nil,
         transport_types: String? = nil,
-        limit: Int?  = nil,
-        offset: Int? = nil
-    ) async throws -> Components.Schemas.Segments {
-        try await searchService.getScheduleBetweenStations(
+        offset: Int? = nil,
+        limit: Int? = nil,
+        result_timezone: String? = nil,
+        transfers: Bool? = nil
+    ) async throws -> Segments {
+        try await searchService.getSegments(
+            apikey: apikey,
             from: from,
             to: to,
-            date: date ?? Date().yyyyMMdd,
-            transportTypes: transport_types,
-            limit: limit
+            format: format,
+            lang: lang,
+            date: date,
+            transport_types: transport_types,
+            offset: offset,
+            limit: limit,
+            result_timezone: result_timezone,
+            transfers: transfers
         )
     }
     
     // MARK: - Carrier
     func getCarrierInfo(
+        apikey: String,
         code: String,
-        system: String?  = nil
+        system: String? = nil,
+        lang: String? = nil,
+        format: String? = nil
     ) async throws -> CarrierResponse {
         try await carrierService.getCarrierInfo(
-            apikey: Secrets.apiKey,
+            apikey: apikey,
             code: code,
-            system: system
+            system: system,
+            lang: lang,
+            format: format
         )
     }
     

@@ -8,12 +8,6 @@ final class MainViewModel: ObservableObject {
     @Published var toStation = ""
     @Published var showCarrierList = false
     
-    init() {
-        Task {
-            _ = try? await NetworkManager.shared.getAllCities()
-        }
-    }
-    
     var isReadyToSearch: Bool {
         !fromCity.isEmpty && !toCity.isEmpty
     }
