@@ -37,10 +37,10 @@ struct CarrierLogoView: View {
 
     private var monogram: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 4)
-                .fill(Color(.ypLightGray))
+            RoundedRectangle(cornerRadius: 12)
+                .fill(Color(.ypWhiteUniversal))
             Text(initials(from: title))
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 24, weight: .semibold))
                 .foregroundColor(.ypBlack)
         }
     }
@@ -68,4 +68,5 @@ struct CarrierLogoView: View {
         .frame(width: 60, height: 60)
     }
     .padding()
+    .background(.ypBlackUniversal)
 }

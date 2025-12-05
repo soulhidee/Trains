@@ -4,8 +4,10 @@ import Combine
 final class MainViewModel: ObservableObject {
     @Published var fromCity = ""
     @Published var fromStation = ""
+    @Published var fromCode = ""
     @Published var toCity = ""
     @Published var toStation = ""
+    @Published var toCode = ""
     @Published var showCarrierList = false
     
     var isReadyToSearch: Bool {

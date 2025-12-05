@@ -4,7 +4,7 @@ import OpenAPIURLSession
 
 @MainActor
 class CarriersViewModel: ObservableObject {
-    @Published var trips: [Carrier] = []
+    @Published var allCarriers: [Carrier] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     
@@ -82,13 +82,13 @@ class CarriersViewModel: ObservableObject {
             allTrips.append(contentsOf: intervalTrips)
         }
         
-        trips = allTrips
+        allCarriers = allTrips
         
         if let filters = currentFilters {
-            trips = applyFilters(trips, filters: filters)
+            allCarriers = applyFilters(allCarriers, filters: filters)
         }
         
-        trips = trips.sorted { trip1, trip2 in
+        allCarriers = allCarriers.sorted { trip1, trip2 in
             trip1.sortDate < trip2.sortDate
         }
     }

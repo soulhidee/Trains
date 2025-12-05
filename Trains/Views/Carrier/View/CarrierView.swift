@@ -8,6 +8,8 @@ struct CarrierView: View {
     let onBack: () -> Void
     let onServerError: (() -> Void)?
     let onNoInternet: (() -> Void)?
+    let fromCode: String
+    let toCode: String
     
     @StateObject private var viewModel = CarriersViewModel()
     @State private var showFilter = false
@@ -94,7 +96,7 @@ struct CarrierView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.ypWhite)
-            } else if viewModel.trips.isEmpty {
+            } else if viewModel.allCarriers.isEmpty {
                 // Экран "Вариантов нет" (без дублирования верхней панели и маршрута)
                 ZStack(alignment: .bottom) {
                     VStack {
@@ -128,7 +130,7 @@ struct CarrierView: View {
                 ZStack(alignment: .bottom) {
                     ScrollView {
                         LazyVStack(spacing: 8) {
-                            ForEach(viewModel.trips) { trip in
+                            ForEach(viewModel.allCarriers) { trip in
                                 CarrierCardView(trip: trip)
                                     .onTapGesture {
                                         selectedTrip = trip
@@ -245,7 +247,9 @@ struct CarrierView: View {
         toStation: "Балтийский вокзал",
         onBack: {},
         onServerError: nil,
-        onNoInternet: nil
+        onNoInternet: nil,
+        fromCode: "c213",
+        toCode: "c2",
     )
     .background()
 }

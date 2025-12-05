@@ -4,27 +4,28 @@ struct CarrierCardView: View {
     let trip: Carrier
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 4) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 12) {
                         CarrierLogoView(logoURLString: trip.carrier.logo, title: trip.carrier.title)
                             .frame(width: 38, height: 38)
-                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
                             .background(
-                                RoundedRectangle(cornerRadius: 4)
+                                RoundedRectangle(cornerRadius: 12)
                                     .fill(.ypLightGray)
                             )
-                        
-                        Text(trip.carrier.title)
-                            .font(.system(size: 17, weight: .regular))
-                            .foregroundColor(.ypBlackUniversal)
-                    }
-                    
-                    if let transferInfo = trip.transferInfo {
-                        Text(transferInfo)
-                            .font(.system(size: 12, weight: .regular))
-                            .foregroundColor(.ypRed)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(trip.carrier.title)
+                                .font(.system(size: 17, weight: .regular))
+                                .foregroundColor(.ypBlackUniversal)
+                            
+                            if let transferInfo = trip.transferInfo {
+                                Text(transferInfo)
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundColor(.ypRed)
+                            }
+                        }
                     }
                 }
                 
@@ -35,7 +36,7 @@ struct CarrierCardView: View {
                     .foregroundColor(.ypBlackUniversal)
             }
             
-            .padding(.horizontal, 15)
+            .padding(.horizontal, 14)
             .padding(.top, 14)
             
             HStack {
@@ -49,9 +50,9 @@ struct CarrierCardView: View {
                         .frame(height: 1)
                     
                     Text(trip.duration)
-                        .font(.system(size: 12))
+                        .font(.system(size: 12, weight: .regular))
                         .foregroundColor(.ypBlackUniversal)
-                        .padding(.horizontal, 8)
+                        .padding(.horizontal, 5)
                     
                     Rectangle()
                         .fill(.ypGray)
@@ -62,8 +63,9 @@ struct CarrierCardView: View {
                     .font(.system(size: 17, weight: .medium))
                     .foregroundColor(.ypBlackUniversal)
             }
-            .padding(.horizontal, 20)
-            .padding(.bottom, 20)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 14)
+
         }
         .background(.ypLightGray)
         .cornerRadius(24)
@@ -92,5 +94,5 @@ struct CarrierCardView: View {
         sortDate: Date()
     ))
     .padding()
-    .background(.ypWhite)
+    
 }

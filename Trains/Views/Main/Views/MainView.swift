@@ -38,7 +38,9 @@ struct MainView: View {
                     toStation: viewModel.toStation,
                     onBack: { dismiss() },
                     onServerError: nil,
-                    onNoInternet: nil
+                    onNoInternet: nil,
+                    fromCode: viewModel.fromCode,
+                    toCode: viewModel.toCode
                 )
             }
         }
