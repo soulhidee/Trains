@@ -1,24 +1,47 @@
 import SwiftUI
 
 struct SelectStationView: View {
-    let onSelect: (String) -> Void
+    let onSelect: (DirectoryStation) -> Void  // ← ИЗМЕНИЛИ: теперь передаём объект
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: SelectStationViewModel
     
-    init(cityName: String, onSelect: @escaping (String) -> Void) {
+    init(cityName: String, onSelect: @escaping (DirectoryStation) -> Void) {
         self.onSelect = onSelect
         _viewModel = StateObject(wrappedValue: SelectStationViewModel(cityName: cityName))
     }
     
     var body: some View {
-        SelectionListView(
-            title: "Выбор станции",
-            searchPrompt: "Введите запрос",
-            emptyMassage: viewModel.isLoading ? "Загрузка..." : "Станция не найдена",
-            items: viewModel.filteredStations.map { $0.title },
-            onSelect: onSelect
-        )
+        List(viewModel.filteredStations, id: \.title) { station in  // ← ИЗМЕНИЛИ: теперь итерируем по объектам
+            Button {
+                onSelect(station)  // ← ИЗМЕНИЛИ: передаём весь объект
+            } label: {
+                SelectionRowView(title: station.title)
+            }
+            .buttonStyle(.plain)
+            .listRowSeparator(.hidden)
+            .listRowBackground(Color.ypWhite)
+        }
+        .navigationTitle("Выбор станции")
+        .navigationBarTitleDisplayMode(.inline)
+        .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Введите запрос")
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    dismiss()
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundColor(.ypBlack)
+                }
+            }
+        }
         .overlay {
+            if viewModel.filteredStations.isEmpty && !viewModel.searchText.isEmpty {
+                Text(viewModel.isLoading ? "Загрузка..." : "Станция не найдена")
+                    .font(.system(size: 24, weight: .bold))
+            }
+            
             if viewModel.isLoading && viewModel.stations.isEmpty {
                 VStack(spacing: 16) {
                     ProgressView()
@@ -30,6 +53,9 @@ struct SelectStationView: View {
                 .background(Color.ypWhite.opacity(0.9))
             }
         }
+        .environment(\.defaultMinListRowHeight, 60)
+        .listStyle(.plain)
+        .background(Color.ypWhite)
         .task {
             await viewModel.loadStations()
         }
@@ -39,7 +65,7 @@ struct SelectStationView: View {
 #Preview {
     NavigationStack {
         SelectStationView(cityName: "Москва") { station in
-            print("Выбрана: \(station)")
+            print("Выбрана: \(station.title), код: \(station.yandexCode ?? "нет")")
         }
     }
 }

@@ -1,4 +1,5 @@
 import Combine
+import Foundation
 
 @MainActor
 final class MainViewModel: ObservableObject {
@@ -9,12 +10,34 @@ final class MainViewModel: ObservableObject {
     @Published var toStation = ""
     @Published var toCode = ""
     @Published var showCarrierList = false
+    @Published var errorMessage: String?
     
     var isReadyToSearch: Bool {
-        !fromCity.isEmpty && !toCity.isEmpty
+        !fromCity.isEmpty && !toCity.isEmpty && !fromStation.isEmpty && !toStation.isEmpty && !fromCode.isEmpty && !toCode.isEmpty
+    }
+    
+    func setFromStation(_ station: DirectoryStation) {
+        fromStation = station.title
+        fromCode = station.yandexCode ?? ""
+        print("✅ Установлена fromStation: '\(station.title)', код: '\(fromCode)'")
+    }
+    
+    func setToStation(_ station: DirectoryStation) {
+        toStation = station.title
+        toCode = station.yandexCode ?? ""
+        print("✅ Установлена toStation: '\(station.title)', код: '\(toCode)'")
     }
     
     func openCarrierList() {
+        guard isReadyToSearch else {
+            errorMessage = "Заполните все поля"
+            return
+        }
+        
+        print("✅ Открываем список рейсов:")
+        print("  from: '\(fromCity)' (\(fromStation)) - код: '\(fromCode)'")
+        print("  to: '\(toCity)' (\(toStation)) - код: '\(toCode)'")
+        
         showCarrierList = true
     }
     
@@ -25,18 +48,15 @@ final class MainViewModel: ObservableObject {
     func resetLocations() {
         fromCity = ""
         fromStation = ""
+        fromCode = ""
         toCity = ""
         toStation = ""
+        toCode = ""
     }
     
     func swapLocations() {
-        let tempCity = fromCity
-        let tempStation = fromStation
-        
-        fromCity = toCity
-        fromStation = toStation
-        
-        toCity = tempCity
-        toStation = tempStation
+        swap(&fromCity, &toCity)
+        swap(&fromStation, &toStation)
+        swap(&fromCode, &toCode)
     }
 }

@@ -6,16 +6,12 @@ struct LocationSwapView: View {
     @Binding var toCity: String
     @Binding var toStation: String
     
+    var onFromStationSelected: ((DirectoryStation) -> Void)?
+    var onToStationSelected: ((DirectoryStation) -> Void)?
+    
     @State private var showFromCitySelection = false
     @State private var showToCitySelection = false
     @State private var navigationPath = NavigationPath()
-    
-    private func formattedLocation(city: String, station: String) -> String {
-        if city.isEmpty && station.isEmpty {
-            return ""
-        }
-        return "\(city) (\(station))"
-    }
     
     var body: some View {
         HStack(spacing: 16) {
@@ -68,11 +64,13 @@ struct LocationSwapView: View {
                 .navigationDestination(for: SelectionDestination.self) { destination in
                     switch destination {
                     case .station(let cityName, let isFrom):
-                        SelectStationView(cityName: cityName) { selectedStation in
+                        SelectStationView(cityName: cityName) { station in
                             if isFrom {
-                                fromStation = selectedStation
+                                fromStation = station.title
+                                onFromStationSelected?(station)
                             } else {
-                                toStation = selectedStation
+                                toStation = station.title
+                                onToStationSelected?(station)
                             }
                             showFromCitySelection = false
                             showToCitySelection = false
@@ -92,11 +90,13 @@ struct LocationSwapView: View {
                 .navigationDestination(for: SelectionDestination.self) { destination in
                     switch destination {
                     case .station(let cityName, let isFrom):
-                        SelectStationView(cityName: cityName) { selectedStation in
+                        SelectStationView(cityName: cityName) { station in
                             if isFrom {
-                                fromStation = selectedStation
+                                fromStation = station.title
+                                onFromStationSelected?(station)
                             } else {
-                                toStation = selectedStation
+                                toStation = station.title
+                                onToStationSelected?(station)
                             }
                             showFromCitySelection = false
                             showToCitySelection = false
