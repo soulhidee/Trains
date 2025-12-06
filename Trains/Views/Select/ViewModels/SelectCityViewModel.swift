@@ -8,6 +8,8 @@ final class SelectCityViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var searchText = ""
     
+    private let appState = AppState.shared
+    
     var filteredCities: [DirectoryCity] {
         if searchText.isEmpty {
             return cities
@@ -16,22 +18,27 @@ final class SelectCityViewModel: ObservableObject {
     }
     
     func loadCities() async {
-        await MainActor.run {
-            isLoading = true
-            errorMessage = nil
+        isLoading = true
+        errorMessage = nil
+        
+        // Загружаем данные если ещё не загружены
+        await appState.loadDataIfNeeded()
+        
+        guard let service = appState.getService() else {
+            errorMessage = "Не удалось загрузить данные"
+            isLoading = false
+            return
         }
         
         do {
-            let fetchedCities = try await APIClient.shared.fetchAllCities(apikey: Secrets.apiKey)
-            await MainActor.run {
-                self.cities = fetchedCities
-                self.isLoading = false
-            }
+            // Берём из кэша - мгновенно!
+            let fetchedCities = try await service.fetchAllCities()
+            cities = fetchedCities
+            print("✅ Города загружены из кэша: \(cities.count)")
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
-            }
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
 }

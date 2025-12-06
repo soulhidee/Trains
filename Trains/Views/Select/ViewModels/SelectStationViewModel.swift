@@ -9,6 +9,7 @@ final class SelectStationViewModel: ObservableObject {
     @Published var searchText = ""
     
     private let cityName: String
+    private let appState = AppState.shared
     
     init(cityName: String) {
         self.cityName = cityName
@@ -22,22 +23,30 @@ final class SelectStationViewModel: ObservableObject {
     }
     
     func loadStations() async {
-        await MainActor.run {
-            isLoading = true
-            errorMessage = nil
+        isLoading = true
+        errorMessage = nil
+        
+        // Данные уже должны быть загружены после выбора города
+        if appState.getService() == nil {
+            // На всякий случай загружаем
+            await appState.loadDataIfNeeded()
+        }
+        
+        guard let service = appState.getService() else {
+            errorMessage = "Не удалось загрузить данные"
+            isLoading = false
+            return
         }
         
         do {
-            let fetchedStations = try await APIClient.shared.fetchStations(inCityTitle: cityName, apikey: Secrets.apiKey)
-            await MainActor.run {
-                self.stations = fetchedStations
-                self.isLoading = false
-            }
+            // Берём из кэша - быстро!
+            let fetchedStations = try await service.fetchStations(inCityTitle: cityName)
+            stations = fetchedStations
+            print("✅ Станции для \(cityName) загружены из кэша: \(stations.count)")
+            isLoading = false
         } catch {
-            await MainActor.run {
-                self.errorMessage = error.localizedDescription
-                self.isLoading = false
-            }
+            errorMessage = error.localizedDescription
+            isLoading = false
         }
     }
 }
