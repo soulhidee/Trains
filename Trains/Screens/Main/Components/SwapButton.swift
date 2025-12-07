@@ -1,13 +1,18 @@
+// SwapButton.swift
 import SwiftUI
 
 struct SwapButton: View {
     // MARK: - Properties
     let action: () -> Void
     @State private var isPressed = false
+    @State private var rotationAngle: Double = 0
     
     // MARK: - Body
     var body: some View {
         Button(action: {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.6)) {
+                rotationAngle += 180
+            }
             action()
         }) {
             buttonContent
@@ -23,6 +28,7 @@ struct SwapButton: View {
             Image(.change)
                 .foregroundStyle(.ypBlue)
         }
+        .rotationEffect(.degrees(rotationAngle))
     }
 }
 
