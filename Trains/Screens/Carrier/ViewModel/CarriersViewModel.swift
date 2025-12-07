@@ -33,22 +33,33 @@ class CarriersViewModel: ObservableObject {
                 transfers = nil
             }
             
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+            let todayDate = dateFormatter.string(from: Date())
+            
+            print("🔍 DEBUG: Загружаем рейсы на дату: \(todayDate)")
+            
             let segments = try await api.getSegments(
                 apikey: apikey,
                 from: from,
                 to: to,
                 format: "json",
                 lang: "ru_RU",
+                date: todayDate,
                 transport_types: "train",
                 limit: 1000,
                 transfers: transfers
             )
             
+            print("🔍 DEBUG: Получено segments: \(segments.segments?.count ?? 0)")
+            print("🔍 DEBUG: Получено interval_segments: \(segments.interval_segments?.count ?? 0)")
+            
             await processSegments(segments)
         } catch {
             if error.localizedDescription.contains("network") ||
-               error.localizedDescription.contains("internet") ||
-               error.localizedDescription.contains("offline") {
+                error.localizedDescription.contains("internet") ||
+                error.localizedDescription.contains("offline") {
                 onNoInternet?()
             } else {
                 onServerError?()
@@ -106,7 +117,7 @@ class CarriersViewModel: ObservableObject {
         let word = pluralizeHours(hours)
         return "\(hours) \(word)"
     }
-
+    
     private func pluralizeHours(_ value: Int) -> String {
         let v = value % 100
         if v >= 11 && v <= 14 { return "часов" }
@@ -153,7 +164,7 @@ class CarriersViewModel: ObservableObject {
     
     private func getMonthName(_ month: Int) -> String {
         let months = ["", "января", "февраля", "марта", "апреля", "мая", "июня",
-                     "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+                      "июля", "августа", "сентября", "октября", "ноября", "декабря"]
         return months[safe: month] ?? ""
     }
     
