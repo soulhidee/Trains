@@ -65,13 +65,16 @@ struct FilterView: View {
             .listStyle(.plain)
             .environment(\.defaultMinListRowHeight, 60)
             
-            if viewModel.hasAnySelection {
-                PrimaryButton(title: "Применить", action: {
+            PrimaryButton(
+                title: "Применить",
+                showIndicator: viewModel.hasAnySelection,
+                action: {
                     viewModel.applyFilters()
                     dismiss()
-                })
-                .padding()
-            }
+                }
+            )
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
         }
         .background(Color.ypWhite)
         .navigationBarBackButtonHidden(true)
