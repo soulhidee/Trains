@@ -27,7 +27,6 @@ actor DirectoryService {
     }
     
     // MARK: - City / Station extraction
-    
     private func extractCity(fromStationTitle title: String) -> String {
         if let commaIdx = title.firstIndex(of: ",") {
             return String(title[..<commaIdx])
@@ -59,7 +58,6 @@ actor DirectoryService {
     }
     
     // MARK: - Fetch cities
-    
     func fetchAllCities() async throws -> [DirectoryCity] {
         if let cached = cachedCities { return cached }
         if let task = loadingTask { return try await task.value }
@@ -94,7 +92,6 @@ actor DirectoryService {
     }
     
     // MARK: - Fetch stations
-    
     func fetchStations(inCityTitle cityTitle: String) async throws -> [DirectoryStation] {
         let trimmed = cityTitle.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return [] }

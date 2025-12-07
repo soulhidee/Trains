@@ -78,7 +78,7 @@ struct CarrierCardView: View {
     CarrierCardView(trip: Carrier(
         carrier: CarrierInfo(
             title: "РЖД",
-            logo: nil,
+            logo: "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif",
             code: 1,
             email: nil,
             phone: nil,

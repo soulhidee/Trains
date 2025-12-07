@@ -1,10 +1,9 @@
-
 import SwiftUI
 
 struct CarrierLogoView: View {
     let logoURLString: String?
     let title: String
-
+    
     var body: some View {
         Group {
             if let urlString = logoURLString?.replacingOccurrences(of: "http://", with: "https://"),
@@ -14,10 +13,7 @@ struct CarrierLogoView: View {
                     case .empty:
                         placeholder
                     case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .padding(4)
+                        imageContainer(image: image)
                     case .failure:
                         monogram
                     @unknown default:
@@ -29,12 +25,26 @@ struct CarrierLogoView: View {
             }
         }
     }
-
+    
+    private func imageContainer(image: Image) -> some View {
+        ZStack {
+            Color(.ypWhiteUniversal)
+            image
+                .resizable()
+                .scaledToFill()
+                .frame(width: 38, height: 38, alignment: .leading)
+                .scaleEffect(0.51, anchor: .leading)
+                .clipped()
+                .scaleEffect(1, anchor: .center)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+    
     private var placeholder: some View {
         RoundedRectangle(cornerRadius: 4)
             .fill(.ypLightGray)
     }
-
+    
     private var monogram: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 12)
@@ -44,7 +54,7 @@ struct CarrierLogoView: View {
                 .foregroundColor(.ypBlack)
         }
     }
-
+    
     private func initials(from title: String) -> String {
         let parts = title.split(separator: " ")
         let first = parts.first?.first.map { String($0) } ?? ""
@@ -56,11 +66,11 @@ struct CarrierLogoView: View {
 #Preview {
     VStack(spacing: 20) {
         CarrierLogoView(
-            logoURLString: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Logo_RZD.svg/256px-Logo_RZD.svg.png",
+            logoURLString: "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif",
             title: "РЖД"
         )
-        .frame(width: 60, height: 60)
-
+        .frame(width: 38, height: 38)
+        
         CarrierLogoView(
             logoURLString: nil,
             title: "Ласточка"
