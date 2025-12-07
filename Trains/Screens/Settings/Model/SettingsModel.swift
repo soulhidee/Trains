@@ -1,6 +1,5 @@
 import Foundation
 
-// MARK: - Settings Model
 struct SettingsModel: Codable, Sendable {
     var isDarkModeEnabled: Bool
     

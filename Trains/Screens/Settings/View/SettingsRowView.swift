@@ -1,12 +1,15 @@
 import SwiftUI
 
 struct SettingsRowView: View {
+    // MARK: - Properties
     let title: String
     let showToggle: Bool
     let showChevron: Bool
-    @Binding var isOn: Bool
     let action: (() -> Void)?
     
+    @Binding var isOn: Bool
+    
+    // MARK: - Init
     init(
         title: String,
         showToggle: Bool = false,
@@ -21,17 +24,20 @@ struct SettingsRowView: View {
         self.action = action
     }
     
+    // MARK: - Body
     var body: some View {
         Button(action: {
             action?()
         }) {
             HStack {
+                // MARK: - Title
                 Text(title)
                     .foregroundStyle(.ypBlack)
                     .font(.system(size: 17))
                 
                 Spacer()
                 
+                // MARK: - Trailing Accessory
                 if showToggle {
                     Toggle("", isOn: $isOn)
                         .labelsHidden()
@@ -46,6 +52,7 @@ struct SettingsRowView: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     VStack(spacing: 0) {
         SettingsRowView(
