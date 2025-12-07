@@ -104,12 +104,22 @@ class CarriersViewModel: ObservableObject {
         }
     }
     
-    private func formatTime(_ timeString: String) -> String {
-        let parts = timeString.contains(" ") ? timeString.components(separatedBy: " ") : ["", timeString]
-        let timeComponent = parts.last ?? timeString
-        let timeParts = timeComponent.components(separatedBy: ":")
-        guard timeParts.count >= 2 else { return timeComponent }
-        return "\(timeParts[0]):\(timeParts[1])"
+    private func formatTime(_ isoString: String) -> String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+
+        guard let date =
+            isoFormatter.date(from: isoString) ??
+            ISO8601DateFormatter().date(from: isoString)
+        else {
+            return ""
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "H:mm"
+        formatter.locale = Locale(identifier: "ru_RU")
+
+        return formatter.string(from: date)
     }
     
     private func formatDuration(_ durationSeconds: Int) -> String {
