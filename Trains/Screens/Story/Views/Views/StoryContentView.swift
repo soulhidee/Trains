@@ -14,7 +14,7 @@ struct StoryContentView: View {
     
     // MARK: - Initialization
     init(
-        stories: [Story] = [.story1, .story2, .story3],
+        stories: [Story] = [.story1, .story2, .story3, .story4, .story5],
         startIndex: Int = 0,
         onStoryViewed: ((Int) -> Void)? = nil
     ) {

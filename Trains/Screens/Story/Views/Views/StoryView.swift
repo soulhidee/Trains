@@ -21,6 +21,7 @@ struct StoryView: View {
                         storyTitle
                         storyDescription
                     }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.init(top: 0, leading: 16, bottom: 91, trailing: 16))
                 }
             )
