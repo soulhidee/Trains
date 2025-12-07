@@ -13,10 +13,10 @@ struct CarrierView: View {
     
     @StateObject private var viewModel = CarriersViewModel()
     @State private var showFilter = false
-    @State private var currentFilters: FilterOptions?
     @State private var showCarrierInfo = false
     @State private var selectedTrip: Carrier?
     @State private var showServerError = false
+    @State private var activeFilterCount = 0
     
     private var routeTitle: String {
         "\(fromCity)\(fromStation.isEmpty ? "" : " (\(fromStation))") → \(toCity)\(toStation.isEmpty ? "" : " (\(toStation))")"
@@ -24,7 +24,6 @@ struct CarrierView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Навигационная панель
             VStack(spacing: 0) {
                 Color(.ypWhite).frame(height: 12).ignoresSafeArea(edges: .top)
                 
@@ -35,13 +34,11 @@ struct CarrierView: View {
                             .foregroundColor(.ypBlack)
                     }
                     .padding(.leading, 16)
-                    
                     Spacer()
                 }
                 .padding(.vertical, 12)
                 .padding(.top, 8)
                 
-                // Заголовок с маршрутом
                 Text(routeTitle)
                     .font(.system(size: 24, weight: .bold))
                     .foregroundColor(.ypBlack)
@@ -51,75 +48,48 @@ struct CarrierView: View {
             }
             .background(.ypWhite)
             
-            // Основной контент
-            if viewModel.isLoading {
-                VStack(spacing: 16) {
-                    ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: .ypBlack))
-                        .scaleEffect(1.5)
-                    
-                    Text("Загрузка рейсов...")
-                        .font(.system(size: 17))
-                        .foregroundColor(.ypBlack)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(.ypWhite)
-            } else if let errorMessage = viewModel.errorMessage {
-                VStack(spacing: 16) {
-                    Image(systemName: "exclamationmark.triangle")
-                        .font(.system(size: 48))
-                        .foregroundColor(.ypRed)
-                    
-                    Text("Ошибка")
-                        .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.ypBlack)
-                    
-                    Text(errorMessage)
-                        .font(.system(size: 16))
-                        .foregroundColor(.ypGray)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                    
-                    Button("Попробовать снова") {
-                        Task {
-                            await loadTrips()
-                        }
+            ZStack {
+                if viewModel.isLoading {
+                    VStack(spacing: 16) {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle(tint: .ypBlack))
+                            .scaleEffect(1.5)
+                        Text("Загрузка рейсов...")
+                            .font(.system(size: 17))
+                            .foregroundColor(.ypBlack)
                     }
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.ypBlue)
-                    .padding(.top, 8)
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(.ypWhite)
-            } else if viewModel.allCarriers.isEmpty {
-                ZStack(alignment: .bottom) {
+                    
+                } else if let errorMessage = viewModel.errorMessage {
+                    VStack(spacing: 16) {
+                        Image(systemName: "exclamationmark.triangle")
+                            .font(.system(size: 48))
+                            .foregroundColor(.ypRed)
+                        Text("Ошибка")
+                            .font(.system(size: 20, weight: .bold))
+                            .foregroundColor(.ypBlack)
+                        Text(errorMessage)
+                            .font(.system(size: 16))
+                            .foregroundColor(.ypGray)
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 32)
+                        Button("Попробовать снова") {
+                            Task { await loadTrips() }
+                        }
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.ypBlue)
+                        .padding(.top, 8)
+                    }
+                    
+                } else if viewModel.allCarriers.isEmpty {
                     VStack {
                         Spacer()
                         Text("Вариантов нет")
                             .font(.system(size: 24, weight: .bold))
                             .foregroundColor(.ypBlack)
-                            .multilineTextAlignment(.center)
                         Spacer()
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .background(.ypWhite)
-
-                    VStack {
-                        Button(action: { showFilter = true }) {
-                            Text("Уточнить время")
-                                .font(.system(size: 17, weight: .bold))
-                                .foregroundColor(.ypWhiteUniversal)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 20)
-                                .background(.ypBlue)
-                                .cornerRadius(16)
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
-                    }
-                }
-            } else {
-                ZStack(alignment: .bottom) {
+                    
+                } else {
                     ScrollView {
                         LazyVStack(spacing: 8) {
                             ForEach(viewModel.allCarriers) { trip in
@@ -134,64 +104,70 @@ struct CarrierView: View {
                         .padding(.top, 16)
                         .padding(.bottom, 100)
                     }
-                    .background(.ypWhite)
-                    
-                    VStack {
-                        Button(action: { showFilter = true }) {
-                            Text("Уточнить время")
-                                .font(.system(size: 17, weight: .bold))
-                                .foregroundColor(.ypWhiteUniversal)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 20)
-                                .background(.ypBlue)
-                                .cornerRadius(16)
-                        }
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 16)
-                    }
                 }
-                .background(.ypWhite)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.ypWhite)
+            
+            PrimaryButton(
+                title: "Уточнить время",
+                showIndicator: activeFilterCount > 0,
+                action: { showFilter = true }
+            )
+            .padding(.horizontal, 16)
+            .padding(.bottom, 16)
+        }
+        .background(.ypWhite)
+        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .tabBar)
+        
+        .navigationDestination(isPresented: $showFilter) {
+            FilterView(
+                initialTimes: viewModel.selectedTimes,
+                initialTransfers: viewModel.showTransfers
+            ) { times, transfers in
+                
+                viewModel.updateFilters(times: times, transfers: transfers)
+                
+                let count = times.count + (transfers != nil ? 1 : 0)
+                withAnimation { activeFilterCount = count }
+                
+                Task {
+                    await viewModel.loadTrips(
+                        from: fromCode,
+                        to: toCode,
+                        fromStation: fromStation,
+                        toStation: toStation
+                    )
+                }
             }
         }
-        .navigationDestination(isPresented: $showFilter) {
-           FilterView()
-        }
+        
         .navigationDestination(isPresented: $showCarrierInfo) {
             if let trip = selectedTrip {
-                CarrierInfoView(
-                    carrier: trip.carrier,
-                    onBack: { showCarrierInfo = false }
-                )
-            } else {
-                CarrierInfoView(
-                    carrier: CarrierInfo(title: "", logo: nil, code: nil, email: nil, phone: nil, url: nil, contacts: nil),
-                    onBack: { showCarrierInfo = false }
-                )
+                CarrierInfoView(carrier: trip.carrier, onBack: { showCarrierInfo = false })
             }
         }
+        
         .onAppear {
             viewModel.setErrorCallbacks(
-                onServerError: {
-                    showServerError = true
-                },
-                onNoInternet: {
-                    onNoInternet?()
-                }
+                onServerError: { showServerError = true },
+                onNoInternet: { onNoInternet?() }
             )
         }
         .task { await loadTrips() }
-        .navigationBarHidden(true)
-        .toolbar(.hidden, for: .tabBar)
         .fullScreenCover(isPresented: $showServerError) {
             ErrorView(image: Image(.errorNoInternet), title: "Нет Интернета")
         }
-        .background(.ypWhite)
+        .onChange(of: viewModel.hasFilters) { oldValue, newValue in
+            let count = viewModel.selectedTimes.count + (viewModel.showTransfers != nil ? 1 : 0)
+            activeFilterCount = count
+        }
     }
     
     private func loadTrips() async {
-        // Проверяем что коды уже есть
-        print("🔍 DEBUG: fromCode = '\(fromCode)', toCode = '\(toCode)'")
-        print("🔍 DEBUG: fromStation = '\(fromStation)', toStation = '\(toStation)'")
+        print("DEBUG: fromCode = '\(fromCode)', toCode = '\(toCode)'")
+        print("DEBUG: fromStation = '\(fromStation)', toStation = '\(toStation)'")
         
         guard !fromCode.isEmpty, !toCode.isEmpty else {
             await MainActor.run {
@@ -200,7 +176,6 @@ struct CarrierView: View {
             return
         }
         
-        // Используем переданные коды напрямую
         await viewModel.loadTrips(
             from: fromCode,
             to: toCode,
@@ -208,7 +183,7 @@ struct CarrierView: View {
             toStation: toStation
         )
         
-        print("🔍 DEBUG: Загружено рейсов: \(viewModel.allCarriers.count)")
+        print("DEBUG: Загружено рейсов: \(viewModel.allCarriers.count)")
     }
 }
 
@@ -224,5 +199,4 @@ struct CarrierView: View {
         fromCode: "s2000003",
         toCode: "s9602494"
     )
-    .background()
 }

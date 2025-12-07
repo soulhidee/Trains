@@ -7,6 +7,9 @@ class CarriersViewModel: ObservableObject {
     @Published var allCarriers: [Carrier] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
+    @Published var hasFilters: Bool = false
+    @Published var selectedTimes: Set<DepartureTime> = []
+    @Published var showTransfers: Bool?
     
     private let api = APIClient.shared
     private let apikey = Secrets.apiKey
@@ -107,18 +110,18 @@ class CarriersViewModel: ObservableObject {
     private func formatTime(_ isoString: String) -> String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-
+        
         guard let date =
-            isoFormatter.date(from: isoString) ??
-            ISO8601DateFormatter().date(from: isoString)
+                isoFormatter.date(from: isoString) ??
+                ISO8601DateFormatter().date(from: isoString)
         else {
             return ""
         }
-
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "H:mm"
         formatter.locale = Locale(identifier: "ru_RU")
-
+        
         return formatter.string(from: date)
     }
     
@@ -198,10 +201,19 @@ class CarriersViewModel: ObservableObject {
         return Date()
     }
     
+    func updateFilters(times: Set<DepartureTime>, transfers: Bool?) {
+        selectedTimes = times
+        showTransfers = transfers
+        hasFilters = !times.isEmpty || transfers != nil
+        
+        currentFilters = FilterOptions(selectedTimes: times, showTransfers: transfers)
+        
+        print("DEBUG: Фильтры обновлены → время: \(times.map { $0.rawValue }), пересадки: \(transfers.map { $0 ? "да" : "нет" } ?? "nil")")
+    }
+    
     private func applyFilters(_ trips: [Carrier], filters: FilterOptions) -> [Carrier] {
         var filteredTrips = trips
         
-        // Фильтрация по времени отправления
         if !filters.selectedTimes.isEmpty {
             filteredTrips = filteredTrips.filter { trip in
                 let hour = getHourFromTime(trip.departureTime)
@@ -321,7 +333,6 @@ class CarriersViewModel: ObservableObject {
         )
     }
 }
-
 
 extension Array {
     subscript(safe index: Int) -> Element? {
