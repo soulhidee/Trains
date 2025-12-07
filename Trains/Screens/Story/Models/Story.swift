@@ -3,12 +3,14 @@ import Foundation
 import SwiftUI
 
 struct Story: Identifiable {
+    
+    // MARK: - Properties
     let id = UUID()
     let backgroundImage: Image
     let title: String
     let description: String
     
-    
+    // MARK: - Sample Stories
     static let story1 = Story(
         backgroundImage: Image(.story1),
         title: "Text Text Text Text Text Text Text Text Text Text",

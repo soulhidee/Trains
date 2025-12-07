@@ -2,10 +2,13 @@ import Foundation
 import Combine
 
 final class StoryNavigationManager: ObservableObject {
+    // MARK: - Published Properties
     @Published private(set) var currentStoryIndex: Int
     
+    // MARK: - Private Properties
     private let stories: [Story]
     
+    // MARK: - Computed Properties
     var currentStory: Story {
         stories[currentStoryIndex]
     }
@@ -14,11 +17,13 @@ final class StoryNavigationManager: ObservableObject {
         stories.count
     }
     
+    // MARK: - Initialization
     init(stories: [Story], startIndex: Int = 0) {
         self.stories = stories
         self.currentStoryIndex = min(max(startIndex, 0), stories.count - 1)
     }
     
+    // MARK: - Navigation Methods
     func nextStory() {
         if currentStoryIndex + 1 < stories.count {
             currentStoryIndex += 1
@@ -35,6 +40,7 @@ final class StoryNavigationManager: ObservableObject {
         }
     }
     
+    // MARK: - Progress Methods
     func progressForCurrentStory() -> CGFloat {
         CGFloat(currentStoryIndex) / CGFloat(stories.count)
     }

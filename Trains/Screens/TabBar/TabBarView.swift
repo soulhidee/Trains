@@ -1,15 +1,13 @@
 import SwiftUI
 
-// MARK: - TabBarView
 struct TabBarView: View {
-    
     // MARK: - Properties
     @State private var selectedTab = 0
     
     // MARK: - Body
     var body: some View {
         TabView(selection: $selectedTab) {
-            
+
             // MARK: - Main Tab
             MainView()
                 .tabItem {

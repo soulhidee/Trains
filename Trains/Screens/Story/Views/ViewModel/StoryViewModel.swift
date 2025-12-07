@@ -1,17 +1,22 @@
 import Foundation
 import Combine
 
+// MARK: - StoryViewModel
 @MainActor
 final class StoryViewModel: ObservableObject {
+    
+    // MARK: - Published Properties
     @Published var currentStoryIndex: Int
     @Published var progress: CGFloat = 0
     @Published var isTimerRunning = false
     
+    // MARK: - Private Properties
     let stories: [Story]
     private let timerManager: StoryTimerManager
     private let navigationManager: StoryNavigationManager
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - Computed Properties
     var currentStory: Story {
         navigationManager.currentStory
     }
@@ -26,6 +31,7 @@ final class StoryViewModel: ObservableObject {
         return storyProgress + currentStoryProgress
     }
     
+    // MARK: - Initialization
     init(stories: [Story] = [.story1, .story2, .story3], startIndex: Int = 0) {
         self.stories = stories
         self.currentStoryIndex = startIndex
@@ -37,6 +43,7 @@ final class StoryViewModel: ObservableObject {
         setupBindings()
     }
     
+    // MARK: - Bindings
     private func setupBindings() {
         timerManager.$progress
             .assign(to: &$progress)
@@ -45,6 +52,7 @@ final class StoryViewModel: ObservableObject {
             .assign(to: &$currentStoryIndex)
     }
     
+    // MARK: - Lifecycle
     func onAppear() {
         let initialProgress = navigationManager.progressForCurrentStory()
         timerManager.setProgress(initialProgress)
@@ -55,6 +63,7 @@ final class StoryViewModel: ObservableObject {
         timerManager.pause()
     }
     
+    // MARK: - Gesture Handlers
     func handleTap() {
         moveToNextStory()
     }
@@ -67,8 +76,9 @@ final class StoryViewModel: ObservableObject {
         moveToPreviousStory()
     }
     
+    // MARK: - Progress Handling
     func shouldDismiss() -> Bool {
-        return progress >= 1.0
+        progress >= 1.0
     }
     
     func handleProgressChange(_ newValue: CGFloat) {
@@ -80,6 +90,7 @@ final class StoryViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Private Navigation Methods
     private func moveToNextStory() {
         navigationManager.nextStory()
         updateTimerForCurrentStory()

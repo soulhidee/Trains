@@ -2,12 +2,15 @@ import Foundation
 import Combine
 
 final class StoryTimerManager: ObservableObject {
+    // MARK: - Published Properties
     @Published var progress: CGFloat = 0
     
+    // MARK: - Private Properties
     private let configuration: Configuration
     private var timer: Timer.TimerPublisher
     private var cancellable: Cancellable?
     
+    // MARK: - Configuration
     struct Configuration {
         let timerTickInterval: TimeInterval
         let progressPerTick: CGFloat
@@ -22,11 +25,13 @@ final class StoryTimerManager: ObservableObject {
         }
     }
     
+    // MARK: - Initialization
     init(configuration: Configuration) {
         self.configuration = configuration
         self.timer = Self.createTimer(interval: configuration.timerTickInterval)
     }
     
+    // MARK: - Timer Control
     func start() {
         timer = Self.createTimer(interval: configuration.timerTickInterval)
         cancellable = timer
@@ -45,10 +50,12 @@ final class StoryTimerManager: ObservableObject {
         start()
     }
     
+    // MARK: - Progress Control
     func setProgress(_ newProgress: CGFloat) {
         progress = newProgress
     }
     
+    // MARK: - Private Methods
     private func tick() {
         var nextProgress = progress + configuration.progressPerTick
         if nextProgress >= 1 {

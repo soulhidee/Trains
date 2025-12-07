@@ -1,8 +1,11 @@
 import SwiftUI
 
 struct CloseButton: View {
+    
+    // MARK: - Properties
     let action: () -> Void
     
+    // MARK: - Body
     var body: some View {
         Button("", image: .close) {
             action()
@@ -10,6 +13,7 @@ struct CloseButton: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     CloseButton {
         print("Жмяк")
