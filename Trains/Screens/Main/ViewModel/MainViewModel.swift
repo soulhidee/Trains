@@ -1,3 +1,4 @@
+// MainViewModel.swift
 import Combine
 import Foundation
 
@@ -62,8 +63,26 @@ final class MainViewModel: ObservableObject {
     }
     
     func swapLocations() {
-        swap(&fromCity, &toCity)
-        swap(&fromStation, &toStation)
-        swap(&fromCode, &toCode)
+        print("🔄 Свап ДО:")
+        print("  from: '\(fromCity)' (\(fromStation)) - код: '\(fromCode)'")
+        print("  to: '\(toCity)' (\(toStation)) - код: '\(toCode)'")
+        
+        let tempCity = fromCity
+        let tempStation = fromStation
+        let tempCode = fromCode
+        
+        fromCity = toCity
+        fromStation = toStation
+        fromCode = toCode
+        
+        toCity = tempCity
+        toStation = tempStation
+        toCode = tempCode
+        
+        print("🔄 Свап ПОСЛЕ:")
+        print("  from: '\(fromCity)' (\(fromStation)) - код: '\(fromCode)'")
+        print("  to: '\(toCity)' (\(toStation)) - код: '\(toCode)'")
+        
+        objectWillChange.send()
     }
 }

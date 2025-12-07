@@ -1,11 +1,13 @@
 import Foundation
 
+// MARK: - DepartureTime
 enum DepartureTime: String, CaseIterable {
     case morning
     case afternoon
     case evening
     case night
     
+    // MARK: - Public Properties
     var title: String {
         switch self {
         case .morning: return Filter.DepartureTime.morning

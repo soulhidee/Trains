@@ -1,11 +1,9 @@
+// LocationSwapView.swift
 import SwiftUI
 
 struct LocationSwapView: View {
-    // MARK: - Bindings
-    @Binding var fromCity: String
-    @Binding var fromStation: String
-    @Binding var toCity: String
-    @Binding var toStation: String
+    // MARK: - ObservedObject
+    @ObservedObject var viewModel: MainViewModel
     
     // MARK: - Callbacks
     var onFromStationSelected: ((DirectoryStation) -> Void)?
@@ -20,7 +18,9 @@ struct LocationSwapView: View {
     var body: some View {
         HStack(spacing: 16) {
             locationsStack
-            SwapButton { swapLocations() }
+            SwapButton {
+                viewModel.swapLocations()
+            }
         }
         .padding(.vertical, 16)
         .padding(.horizontal, 16)
@@ -37,15 +37,15 @@ struct LocationSwapView: View {
         VStack(spacing: 28) {
             locationButton(
                 placeholder: "Откуда",
-                city: fromCity,
-                station: fromStation,
+                city: viewModel.fromCity,
+                station: viewModel.fromStation,
                 action: { showFromCitySelection = true }
             )
             
             locationButton(
                 placeholder: "Куда",
-                city: toCity,
-                station: toStation,
+                city: viewModel.toCity,
+                station: viewModel.toStation,
                 action: { showToCitySelection = true }
             )
         }
@@ -72,12 +72,12 @@ struct LocationSwapView: View {
         NavigationStack(path: $navigationPath) {
             SelectCityView { selectedCity in
                 if isFrom {
-                    fromCity = selectedCity
-                    fromStation = ""
+                    viewModel.fromCity = selectedCity
+                    viewModel.fromStation = ""
                     navigationPath.append(SelectionDestination.station(cityName: selectedCity, isFrom: true))
                 } else {
-                    toCity = selectedCity
-                    toStation = ""
+                    viewModel.toCity = selectedCity
+                    viewModel.toStation = ""
                     navigationPath.append(SelectionDestination.station(cityName: selectedCity, isFrom: false))
                 }
             }
@@ -86,10 +86,10 @@ struct LocationSwapView: View {
                 case .station(let cityName, let isFromDest):
                     SelectStationView(cityName: cityName) { station in
                         if isFromDest {
-                            fromStation = station.title
+                            viewModel.fromStation = station.title
                             onFromStationSelected?(station)
                         } else {
-                            toStation = station.title
+                            viewModel.toStation = station.title
                             onToStationSelected?(station)
                         }
                         resetSelection()
@@ -100,11 +100,6 @@ struct LocationSwapView: View {
     }
     
     // MARK: - Helpers
-    private func swapLocations() {
-        swap(&fromCity, &toCity)
-        swap(&fromStation, &toStation)
-    }
-    
     private func resetSelection() {
         showFromCitySelection = false
         showToCitySelection = false
@@ -114,15 +109,5 @@ struct LocationSwapView: View {
 
 // MARK: - Preview
 #Preview {
-    @Previewable @State var fromCity = ""
-    @Previewable @State var fromStation = ""
-    @Previewable @State var toCity = ""
-    @Previewable @State var toStation = ""
-    
-    LocationSwapView(
-        fromCity: $fromCity,
-        fromStation: $fromStation,
-        toCity: $toCity,
-        toStation: $toStation
-    )
+    LocationSwapView(viewModel: MainViewModel())
 }

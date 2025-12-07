@@ -1,3 +1,4 @@
+// MainView.swift
 import SwiftUI
 
 struct MainView: View {
@@ -32,10 +33,7 @@ struct MainView: View {
     
     private var locationSection: some View {
         LocationSwapView(
-            fromCity: $viewModel.fromCity,
-            fromStation: $viewModel.fromStation,
-            toCity: $viewModel.toCity,
-            toStation: $viewModel.toStation,
+            viewModel: viewModel,
             onFromStationSelected: viewModel.setFromStation,
             onToStationSelected: viewModel.setToStation
         )
