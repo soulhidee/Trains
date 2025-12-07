@@ -17,9 +17,14 @@ struct SelectCityView: View {
             if viewModel.isLoading && viewModel.cities.isEmpty {
                 VStack(spacing: 16) {
                     ProgressView()
-                    Text("Загрузка городов...")
-                        .font(.system(size: 14, weight: .regular))
-                        .foregroundColor(.ypGray)
+                    VStack(spacing: 5) {
+                        Text("Загрузка городов...")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.ypGray)
+                        Text("Отключите VPN")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.ypGray)
+                    }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.ypWhite.opacity(0.9))

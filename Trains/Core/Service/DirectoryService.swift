@@ -26,6 +26,40 @@ actor DirectoryService {
         self.apikey = apikey
     }
     
+    // MARK: - City / Station extraction
+    
+    private func extractCity(fromStationTitle title: String) -> String {
+        if let commaIdx = title.firstIndex(of: ",") {
+            return String(title[..<commaIdx])
+        }
+        if let parenIdx = title.firstIndex(of: "(") {
+            return String(title[..<parenIdx]).trimmingCharacters(in: .whitespaces)
+        }
+        return title
+    }
+    
+    private func extractStationName(fromFullTitle title: String, cityTitle: String) -> String {
+        guard title.hasPrefix(cityTitle) else {
+            return title
+        }
+        
+        if let commaIdx = title.firstIndex(of: ",") {
+            let after = title.index(after: commaIdx)
+            return String(title[after...]).trimmingCharacters(in: .whitespaces)
+        }
+        
+        if let open = title.firstIndex(of: "("),
+           let close = title.firstIndex(of: ")"),
+           open < close {
+            let inside = title.index(after: open)..<close
+            return String(title[inside]).trimmingCharacters(in: .whitespaces)
+        }
+        
+        return title
+    }
+    
+    // MARK: - Fetch cities
+    
     func fetchAllCities() async throws -> [DirectoryCity] {
         if let cached = cachedCities { return cached }
         if let task = loadingTask { return try await task.value }
@@ -50,8 +84,7 @@ actor DirectoryService {
                 }
             }
             
-            let result = cities.sorted().map { DirectoryCity(title: $0) }
-            return result
+            return cities.sorted().map { DirectoryCity(title: $0) }
         }
         
         self.loadingTask = task
@@ -59,6 +92,8 @@ actor DirectoryService {
         self.cachedCities = result
         return result
     }
+    
+    // MARK: - Fetch stations
     
     func fetchStations(inCityTitle cityTitle: String) async throws -> [DirectoryStation] {
         let trimmed = cityTitle.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -76,15 +111,17 @@ actor DirectoryService {
             for region in regions {
                 let settlements = region["settlements"] as? [[String: Any]] ?? []
                 for settlement in settlements {
-                    let title = (settlement["title"] as? String) ?? ""
-                    guard normalize(title) == target else { continue }
+                    let settlementTitle = (settlement["title"] as? String) ?? ""
+                    guard normalize(settlementTitle) == target else { continue }
                     
                     let stations = settlement["stations"] as? [[String: Any]] ?? []
                     for station in stations {
                         let transportType = (station["transport_type"] as? String) ?? ""
                         guard transportType == "train" else { continue }
                         
-                        let stationTitle = (station["title"] as? String) ?? ""
+                        let stationTitleFull = (station["title"] as? String) ?? ""
+                        let stationTitle = extractStationName(fromFullTitle: stationTitleFull, cityTitle: trimmed)
+                        
                         let codes = station["codes"] as? [String: Any]
                         let yandexCode = codes?["yandex_code"] as? String
                         

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct SelectStationView: View {
-    let onSelect: (DirectoryStation) -> Void  // ← ИЗМЕНИЛИ: теперь передаём объект
+    let onSelect: (DirectoryStation) -> Void
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: SelectStationViewModel
     
@@ -11,9 +11,9 @@ struct SelectStationView: View {
     }
     
     var body: some View {
-        List(viewModel.filteredStations, id: \.title) { station in  // ← ИЗМЕНИЛИ: теперь итерируем по объектам
+        List(viewModel.filteredStations, id: \.title) { station in
             Button {
-                onSelect(station)  // ← ИЗМЕНИЛИ: передаём весь объект
+                onSelect(station)
             } label: {
                 SelectionRowView(title: station.title)
             }

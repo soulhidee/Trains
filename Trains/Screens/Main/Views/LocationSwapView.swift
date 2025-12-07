@@ -24,6 +24,8 @@ struct LocationSwapView: View {
                         city: fromCity,
                         station: fromStation
                     )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
                 
@@ -35,6 +37,8 @@ struct LocationSwapView: View {
                         city: toCity,
                         station: toStation
                     )
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
             }
