@@ -3,6 +3,7 @@ import Foundation
 
 @MainActor
 final class MainViewModel: ObservableObject {
+    // MARK: - Published Properties
     @Published var fromCity = ""
     @Published var fromStation = ""
     @Published var fromCode = ""
@@ -12,10 +13,14 @@ final class MainViewModel: ObservableObject {
     @Published var showCarrierList = false
     @Published var errorMessage: String?
     
+    // MARK: - Computed Properties
     var isReadyToSearch: Bool {
-        !fromCity.isEmpty && !toCity.isEmpty && !fromStation.isEmpty && !toStation.isEmpty && !fromCode.isEmpty && !toCode.isEmpty
+        !fromCity.isEmpty && !toCity.isEmpty &&
+        !fromStation.isEmpty && !toStation.isEmpty &&
+        !fromCode.isEmpty && !toCode.isEmpty
     }
     
+    // MARK: - Station Selection
     func setFromStation(_ station: DirectoryStation) {
         fromStation = station.title
         fromCode = station.yandexCode ?? ""
@@ -28,6 +33,7 @@ final class MainViewModel: ObservableObject {
         print("✅ Установлена toStation: '\(station.title)', код: '\(toCode)'")
     }
     
+    // MARK: - Carrier List
     func openCarrierList() {
         guard isReadyToSearch else {
             errorMessage = "Заполните все поля"
@@ -45,6 +51,7 @@ final class MainViewModel: ObservableObject {
         showCarrierList = false
     }
     
+    // MARK: - Location Management
     func resetLocations() {
         fromCity = ""
         fromStation = ""
