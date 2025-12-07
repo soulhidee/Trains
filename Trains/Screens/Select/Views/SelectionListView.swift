@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct SelectionListView: View {
+    // MARK: - Properties
     let title: String
     let searchPrompt: String
     let emptyMassage: String
@@ -10,7 +11,8 @@ struct SelectionListView: View {
     @State private var searchText = ""
     @Environment(\.dismiss) private var dismiss
     
-    private var filterItems: [String] {
+    // MARK: - Computed
+    private var filteredItems: [String] {
         if searchText.isEmpty {
             return items
         } else {
@@ -18,8 +20,9 @@ struct SelectionListView: View {
         }
     }
     
+    // MARK: - Body
     var body: some View {
-        List(filterItems, id: \.self) { item in
+        List(filteredItems, id: \.self) { item in
             Button {
                 onSelect(item)
             } label: {
@@ -31,33 +34,47 @@ struct SelectionListView: View {
         }
         .navigationTitle(title)
         .navigationBarTitleDisplayMode(.inline)
-        .searchable(text: $searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: searchPrompt)
+        .searchable(
+            text: $searchText,
+            placement: .navigationBarDrawer(displayMode: .always),
+            prompt: searchPrompt
+        )
         .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    dismiss()
-                } label: {
-                    Image(systemName: "chevron.left")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.ypBlack)
-                }
-            }
+            backButton
         }
         .overlay {
-            if filterItems.isEmpty && !searchText.isEmpty {
-                Text(emptyMassage)
-                    .font(.system(size: 24, weight: .bold))
-            }
+            emptyStateOverlay
         }
         .environment(\.defaultMinListRowHeight, 60)
         .listStyle(.plain)
         .background(Color.ypWhite)
     }
+    
+    // MARK: - Private Views
+    private var backButton: some ToolbarContent {
+        ToolbarItem(placement: .topBarLeading) {
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.ypBlack)
+            }
+        }
+    }
+    
+    private var emptyStateOverlay: some View {
+        Group {
+            if filteredItems.isEmpty && !searchText.isEmpty {
+                Text(emptyMassage)
+                    .font(.system(size: 24, weight: .bold))
+            }
+        }
+    }
 }
 
-
-
+// MARK: - Preview
 #Preview {
     NavigationStack {
         SelectionListView(

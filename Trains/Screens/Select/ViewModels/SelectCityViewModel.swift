@@ -3,13 +3,16 @@ import Combine
 
 @MainActor
 final class SelectCityViewModel: ObservableObject {
+    // MARK: - Published Properties
     @Published var cities: [DirectoryCity] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
     @Published var searchText = ""
     
+    // MARK: - Private Properties
     private let appState = AppState.shared
     
+    // MARK: - Computed Properties
     var filteredCities: [DirectoryCity] {
         if searchText.isEmpty {
             return cities
@@ -17,6 +20,7 @@ final class SelectCityViewModel: ObservableObject {
         return cities.filter { $0.title.localizedStandardContains(searchText) }
     }
     
+    // MARK: - Methods
     func loadCities() async {
         isLoading = true
         errorMessage = nil

@@ -1,20 +1,33 @@
 import SwiftUI
 
 struct SelectionRowView: View {
+    // MARK: - Properties
     let title: String
+    
+    // MARK: - Body
     var body: some View {
         HStack {
-            Text(title)
-                .font(.system(size: 17, weight: .regular))
-                .foregroundStyle(.ypBlack)
+            rowTitle
             Spacer()
-            Image(.arrow)
-                .foregroundStyle(.ypBlack)
+            rowIcon
         }
         .background(Color.ypWhite)
     }
+    
+    // MARK: - Private Views
+    private var rowTitle: some View {
+        Text(title)
+            .font(.system(size: 17, weight: .regular))
+            .foregroundStyle(.ypBlack)
+    }
+    
+    private var rowIcon: some View {
+        Image(.arrow)
+            .foregroundStyle(.ypBlack)
+    }
 }
 
+// MARK: - Preview
 #Preview {
     SelectionRowView(title: "Москва")
 }

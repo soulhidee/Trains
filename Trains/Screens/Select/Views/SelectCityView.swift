@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct SelectCityView: View {
+    // MARK: - Properties
     let onSelect: (String) -> Void
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = SelectCityViewModel()
     
+    // MARK: - Body
     var body: some View {
         SelectionListView(
             title: "Выбор города",
@@ -14,6 +16,16 @@ struct SelectCityView: View {
             onSelect: onSelect
         )
         .overlay {
+            loadingOverlay
+        }
+        .task {
+            await viewModel.loadCities()
+        }
+    }
+    
+    // MARK: - Private Views
+    private var loadingOverlay: some View {
+        Group {
             if viewModel.isLoading && viewModel.cities.isEmpty {
                 VStack(spacing: 16) {
                     ProgressView()
@@ -30,12 +42,10 @@ struct SelectCityView: View {
                 .background(Color.ypWhite.opacity(0.9))
             }
         }
-        .task {
-            await viewModel.loadCities()
-        }
     }
 }
 
+// MARK: - Preview
 #Preview {
     NavigationStack {
         SelectCityView { city in
