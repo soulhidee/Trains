@@ -20,6 +20,7 @@ struct StoryItemView: View {
                     .foregroundColor(.ypWhiteUniversal)
                     .lineLimit(3)
                     .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.horizontal, 8)
                     .padding(.bottom, 12)
                     .opacity(isViewed ? 0.5 : 1.0)
