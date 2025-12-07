@@ -21,7 +21,6 @@ final class SelectCityViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        // Загружаем данные если ещё не загружены
         await appState.loadDataIfNeeded()
         
         guard let service = appState.getService() else {
@@ -31,7 +30,6 @@ final class SelectCityViewModel: ObservableObject {
         }
         
         do {
-            // Берём из кэша - мгновенно!
             let fetchedCities = try await service.fetchAllCities()
             cities = fetchedCities
             print("✅ Города загружены из кэша: \(cities.count)")

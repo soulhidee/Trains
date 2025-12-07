@@ -11,14 +11,13 @@ final class AppState: ObservableObject {
     private init() {}
     
     func loadDataIfNeeded() async {
-        guard directoryService == nil else { return } // Уже загружено
+        guard directoryService == nil else { return }
         
         print("🔄 Загружаем данные первый раз...")
         
         let service = DirectoryService(apikey: Secrets.apiKey)
         
         do {
-            // Загружаем города - это закэширует весь JSON
             _ = try await service.fetchAllCities()
             print("✅ Данные загружены и закэшированы в памяти")
             

@@ -26,9 +26,7 @@ final class SelectStationViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        // Данные уже должны быть загружены после выбора города
         if appState.getService() == nil {
-            // На всякий случай загружаем
             await appState.loadDataIfNeeded()
         }
         
@@ -39,7 +37,6 @@ final class SelectStationViewModel: ObservableObject {
         }
         
         do {
-            // Берём из кэша - быстро!
             let fetchedStations = try await service.fetchStations(inCityTitle: cityName)
             stations = fetchedStations
             print("✅ Станции для \(cityName) загружены из кэша: \(stations.count)")
