@@ -1,17 +1,18 @@
 import SwiftUI
+import Combine
 
-@Observable
-final class AppearanceManager: Sendable {
+@MainActor
+final class AppearanceManager: ObservableObject {
     static let shared = AppearanceManager()
     
-    private init() {
-        load()
-    }
-    
-    var isDarkMode: Bool = false {
+    @Published var isDarkMode: Bool = false {
         didSet {
             save()
         }
+    }
+    
+    private init() {
+        load()
     }
     
     private func load() {
