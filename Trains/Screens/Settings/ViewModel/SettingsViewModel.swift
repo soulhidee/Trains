@@ -1,23 +1,25 @@
-import Observation
+import Combine
 
 @MainActor
-@Observable
-final class SettingsViewModel {
+final class SettingsViewModel: ObservableObject {
     
-    // MARK: - Properties
-    private let appearanceManager: AppearanceManager
-    
-    var isDarkMode: Bool {
-            get { appearanceManager.isDarkMode }
-            set { appearanceManager.isDarkMode = newValue }
+    // MARK: - Published Properties
+    @Published var isDarkMode: Bool {
+        didSet {
+            appearanceManager.isDarkMode = isDarkMode
         }
+    }
     
-    var showUserAgreement: Bool = false
+    @Published var showUserAgreement: Bool = false
+    
+    // MARK: - Private Properties
+    private let appearanceManager: AppearanceManager
     
     // MARK: - Initialization
     init(appearanceManager: AppearanceManager = .shared) {
-            self.appearanceManager = appearanceManager
-        }
+        self.appearanceManager = appearanceManager
+        self.isDarkMode = appearanceManager.isDarkMode
+    }
     
     // MARK: - Public Methods
     func openUserAgreement() {
@@ -27,5 +29,4 @@ final class SettingsViewModel {
     func closeUserAgreement() {
         showUserAgreement = false
     }
-
 }

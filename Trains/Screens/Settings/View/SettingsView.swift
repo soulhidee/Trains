@@ -3,7 +3,7 @@ import SwiftUI
 struct SettingsView: View {
     
     // MARK: - Properties
-    @State private var viewModel = SettingsViewModel()
+    @StateObject private var viewModel = SettingsViewModel()
     
     // MARK: - Body
     var body: some View {
