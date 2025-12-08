@@ -50,7 +50,7 @@ struct StoryContentView: View {
                 .padding(.top, 57)
                 .padding(.trailing, 12)
         }
-        .onAppear {
+        .task {
             viewModel.onAppear()
             onStoryViewed?(viewModel.currentStoryIndex)
         }

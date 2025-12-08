@@ -1,4 +1,3 @@
-// MainView.swift
 import SwiftUI
 
 struct MainView: View {
