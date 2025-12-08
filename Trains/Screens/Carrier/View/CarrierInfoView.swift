@@ -135,11 +135,19 @@ struct CarrierInfoView: View {
     }
     
     private func loadCarrierDetails() async {
-        guard !detailsLoaded, let code = carrier.code else { return }
+        guard !detailsLoaded else { return }
+        guard let serverURL = URL(string: "https://api.rasp.yandex.net") else {
+            print("Invalid URL")
+            return
+        }
+        guard let code = carrier.code else { return }
+        
         detailsLoaded = true
+        
         do {
-            let client = Client(serverURL: URL(string: "https://api.rasp.yandex.net")!, transport: URLSessionTransport())
+            let client = Client(serverURL: serverURL, transport: URLSessionTransport())
             let service = CarrierService(client: client)
+            
             let response = try await service.getCarrierInfo(
                 apikey: apikey,
                 code: String(code),
@@ -147,16 +155,20 @@ struct CarrierInfoView: View {
                 lang: "ru_RU",
                 format: "json"
             )
-            if let carrier = response.carriers?.first {
-                let parsed = parseContacts(carrier.contacts)
-                let emailValue = carrier.email ?? parsed.email
-                let phoneValue = carrier.phone ?? parsed.phone
+            
+            if let carrierInfo = response.carriers?.first {
+                let parsedContacts = parseContacts(carrierInfo.contacts)
+                let emailValue = carrierInfo.email ?? parsedContacts.email
+                let phoneValue = carrierInfo.phone ?? parsedContacts.phone
+                
                 await MainActor.run {
-                    email = emailValue
-                    phone = phoneValue
+                    self.email = emailValue
+                    self.phone = phoneValue
                 }
             }
-        } catch {}
+        } catch {
+            print("Failed to load carrier details:", error)
+        }
     }
     
     private func parseContacts(_ contacts: String?) -> (email: String?, phone: String?) {
@@ -178,47 +190,7 @@ struct CarrierInfoView: View {
 }
 
 // MARK: - CarrierInfoLogoView
-struct CarrierInfoLogoView: View {
-    let logoURLString: String?
-    let title: String
-    
-    var body: some View {
-        Group {
-            if let urlString = logoURLString?.replacingOccurrences(of: "http://", with: "https://"),
-               let url = URL(string: urlString) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .empty: placeholder
-                    case .success(let image): image.resizable().scaledToFit()
-                    case .failure: monogram
-                    @unknown default: placeholder
-                    }
-                }
-            } else {
-                monogram
-            }
-        }
-    }
-    
-    private var placeholder: some View { Color(.ypLightGray) }
-    
-    private var monogram: some View {
-        ZStack {
-            Color(.ypWhite)
-            Text(initials(from: title))
-                .font(.system(size: 40, weight: .bold))
-                .foregroundColor(.ypWhite)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-    }
-    
-    private func initials(from title: String) -> String {
-        let parts = title.split(separator: " ")
-        let first = parts.first?.first.map { String($0) } ?? ""
-        let second = parts.dropFirst().first?.first.map { String($0) } ?? ""
-        return (first + second).uppercased()
-    }
-}
+
 
 // MARK: - Preview
 #Preview {

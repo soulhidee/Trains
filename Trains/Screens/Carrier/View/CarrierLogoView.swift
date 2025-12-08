@@ -1,23 +1,21 @@
 import SwiftUI
 
 struct CarrierLogoView: View {
+    // MARK: - Properties
     let logoURLString: String?
     let title: String
     
+    // MARK: - Body
     var body: some View {
         Group {
             if let urlString = logoURLString?.replacingOccurrences(of: "http://", with: "https://"),
                let url = URL(string: urlString) {
                 AsyncImage(url: url) { phase in
                     switch phase {
-                    case .empty:
-                        placeholder
-                    case .success(let image):
-                        imageContainer(image: image)
-                    case .failure:
-                        monogram
-                    @unknown default:
-                        placeholder
+                    case .empty: placeholder
+                    case .success(let image): imageContainer(image: image)
+                    case .failure: monogram
+                    @unknown default: placeholder
                     }
                 }
             } else {
@@ -26,6 +24,7 @@ struct CarrierLogoView: View {
         }
     }
     
+    // MARK: - Subviews
     private func imageContainer(image: Image) -> some View {
         ZStack {
             Color(.ypWhiteUniversal)
@@ -55,6 +54,7 @@ struct CarrierLogoView: View {
         }
     }
     
+    // MARK: - Private Methods
     private func initials(from title: String) -> String {
         let parts = title.split(separator: " ")
         let first = parts.first?.first.map { String($0) } ?? ""
@@ -63,6 +63,7 @@ struct CarrierLogoView: View {
     }
 }
 
+// MARK: - Preview
 #Preview {
     VStack(spacing: 20) {
         CarrierLogoView(
