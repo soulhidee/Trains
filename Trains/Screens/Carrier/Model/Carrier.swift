@@ -1,5 +1,6 @@
 import Foundation
 
+// MARK: - Carrier
 struct Carrier: Identifiable, Sendable {
     let id = UUID()
     let carrier: CarrierInfo

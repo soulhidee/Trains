@@ -1,5 +1,6 @@
 import Foundation
 
+// MARK: - CarrierInfo
 struct CarrierInfo: Sendable {
     let title: String
     let logo: String?

@@ -93,7 +93,7 @@ struct CarrierView: View {
                     ScrollView {
                         LazyVStack(spacing: 8) {
                             ForEach(viewModel.allCarriers) { trip in
-                                CarrierCardView(trip: trip)
+                                CarrierCardView(carrierData: trip)
                                     .onTapGesture {
                                         selectedTrip = trip
                                         showCarrierInfo = true

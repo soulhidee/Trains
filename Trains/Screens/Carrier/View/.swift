@@ -1,9 +1,3 @@
-//
-//  CarrierInfoView.swift
-//  Travel Schedule
-//
-//  Created by Ульта on 22.10.2025.
-//
 
 import SwiftUI
 import OpenAPIURLSession
