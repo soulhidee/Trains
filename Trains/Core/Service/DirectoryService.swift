@@ -1,14 +1,5 @@
 import Foundation
 
-struct DirectoryCity: Hashable, Sendable {
-    let title: String
-}
-
-struct DirectoryStation: Hashable, Sendable {
-    let title: String
-    let yandexCode: String?
-}
-
 extension String {
     var containsRussianLetters: Bool {
         range(of: "[А-Яа-яЁё']", options: .regularExpression) != nil

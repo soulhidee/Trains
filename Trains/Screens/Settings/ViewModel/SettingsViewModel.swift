@@ -2,7 +2,6 @@ import Combine
 
 @MainActor
 final class SettingsViewModel: ObservableObject {
-    
     // MARK: - Published Properties
     @Published var isDarkMode: Bool {
         didSet {
