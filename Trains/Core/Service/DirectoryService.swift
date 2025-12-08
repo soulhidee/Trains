@@ -7,12 +7,14 @@ extension String {
 }
 
 actor DirectoryService {
+    // MARK: - Private Properties
     private let apikey: String
     private var cachedCities: [DirectoryCity]?
     private var cachedCountries: Data?
     private var loadingTask: Task<[DirectoryCity], Error>?
     private var countriesLoadingTask: Task<Data, Error>?
     
+    // MARK: - Initialization
     init(apikey: String) {
         self.apikey = apikey
     }

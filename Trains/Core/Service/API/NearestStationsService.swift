@@ -9,9 +9,8 @@ protocol NearestStationsServiceProtocol {
     func getNearestStations(lat: Double, lng: Double, distance: Int) async throws -> NearestStations
 }
 
-// MARK: - Service Implementation
+// MARK: - Service
 final class NearestStationsService: NearestStationsServiceProtocol {
-    
     // MARK: - Private Properties
     private let client: Client
     private let apiKey: String

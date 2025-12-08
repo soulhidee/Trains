@@ -2,6 +2,7 @@ import Foundation
 import OpenAPIRuntime
 import OpenAPIURLSession
 
+// MARK: - Protocol
 protocol AllStationsServiceProtocol {
     func getAllStations(
         apikey: String,
@@ -10,13 +11,17 @@ protocol AllStationsServiceProtocol {
     ) async throws -> String
 }
 
+// MARK: - Service
 final class AllStationsService: AllStationsServiceProtocol {
+    // MARK: - Properties
     private let client: Client
     
+    // MARK: - Init
     init(client: Client) {
         self.client = client
     }
     
+    // MARK: - Public
     func getAllStations(
         apikey: String,
         lang: String? = nil,
@@ -27,6 +32,7 @@ final class AllStationsService: AllStationsServiceProtocol {
             lang: lang,
             format: format
         ))
+        
         switch output {
         case .ok(let ok):
             switch ok.body {
@@ -38,7 +44,11 @@ final class AllStationsService: AllStationsServiceProtocol {
                 return String(data: collected, encoding: .utf8) ?? ""
             }
         default:
-            throw NSError(domain: "AllStationsService", code: -1, userInfo: [NSLocalizedDescriptionKey: "Non-200 response"])
+            throw NSError(
+                domain: "AllStationsService",
+                code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Non-200 response"]
+            )
         }
     }
 }

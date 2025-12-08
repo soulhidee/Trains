@@ -4,14 +4,17 @@ import OpenAPIURLSession
 
 @globalActor
 actor APIClient {
+    // MARK: - Singleton
     static let shared = APIClient()
     
+    // MARK: - Private Properties
     private let client: Client
     private let searchService: SearchService
     private let carrierService: CarrierService
     private let allStationService: AllStationsService
     private let directoryService: DirectoryService
     
+    // MARK: - Init
     private init() {
         let client = Client(
             serverURL: URL(string: "https://api.rasp.yandex.net") ?? {

@@ -1,10 +1,12 @@
 import Foundation
 
 final class UserDefaultsService: Sendable {
+    // MARK: - Singleton
     static let shared = UserDefaultsService()
     
     private init() {}
     
+    // MARK: - Save / Load Settings
     func saveSettings(_ settings: SettingsModel) {
         if let data = try? JSONEncoder().encode(settings) {
             UserDefaults.standard.set(data, forKey: "appSettings")

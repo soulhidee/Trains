@@ -17,9 +17,8 @@ protocol RouteStationsServiceProtocol {
     ) async throws -> RouteStations
 }
 
-// MARK: - Service Implementation
+// MARK: - Service
 final class RouteStationsService: RouteStationsServiceProtocol {
-    
     // MARK: - Private Properties
     private let client: Client
     private let apiKey: String

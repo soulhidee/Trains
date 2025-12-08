@@ -18,9 +18,8 @@ protocol StationScheduleServiceProtocol {
     ) async throws -> StationSchedule
 }
 
-// MARK: - Service Implementation
+// MARK: - Service
 final class StationScheduleService: StationScheduleServiceProtocol {
-    
     // MARK: - Private Properties
     private let client: Client
     private let apiKey: String
