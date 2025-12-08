@@ -1,0 +1,55 @@
+import SwiftUI
+
+struct SelectCityView: View {
+    // MARK: - Properties
+    let onSelect: (String) -> Void
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var viewModel = SelectCityViewModel()
+    
+    // MARK: - Body
+    var body: some View {
+        SelectionListView(
+            title: "Выбор города",
+            searchPrompt: "Введите запрос",
+            emptyMassage: viewModel.isLoading ? "Загрузка..." : "Город не найден",
+            items: viewModel.filteredCities.map { $0.title },
+            onSelect: onSelect
+        )
+        .overlay {
+            loadingOverlay
+        }
+        .task {
+            await viewModel.loadCities()
+        }
+    }
+    
+    // MARK: - Private Views
+    private var loadingOverlay: some View {
+        Group {
+            if viewModel.isLoading && viewModel.cities.isEmpty {
+                VStack(spacing: 16) {
+                    ProgressView()
+                    VStack(spacing: 5) {
+                        Text("Загрузка городов...")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.ypGray)
+                        Text("Отключите VPN")
+                            .font(.system(size: 14, weight: .regular))
+                            .foregroundColor(.ypGray)
+                    }
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(Color.ypWhite.opacity(0.9))
+            }
+        }
+    }
+}
+
+// MARK: - Preview
+#Preview {
+    NavigationStack {
+        SelectCityView { city in
+            print("Выбран: \(city)")
+        }
+    }
+}
