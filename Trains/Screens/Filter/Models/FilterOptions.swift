@@ -1,6 +1,7 @@
 import Foundation
 
-struct FilterOptions {
+//MARK: - FilterOptions
+struct FilterOptions: Sendable {
     var selectedTimes: Set<DepartureTime> = []
     var showTransfers: Bool?
     

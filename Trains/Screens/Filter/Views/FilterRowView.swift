@@ -1,17 +1,12 @@
-//
-//  FilterRowView.swift
-//  Trains
-//
-//  Created by Даниил on 15.11.2025.
-//
-
 import SwiftUI
 
 struct FilterRowView: View {
+    // MARK: - Properties
     let title: String
     let isSelected: Bool
     let selectionType: SelectionType
     
+    // MARK: - Private Computed Properties
     private var iconName: String {
         switch selectionType {
         case .checkbox:
@@ -21,11 +16,13 @@ struct FilterRowView: View {
         }
     }
     
+    // MARK: - Selection Type
     enum SelectionType {
         case checkbox
         case radio
     }
     
+    // MARK: - Body
     var body: some View {
         HStack {
             Text(title)
@@ -36,15 +33,15 @@ struct FilterRowView: View {
             
             Image(systemName: iconName)
                 .font(.system(size: 24))
+                .foregroundStyle(.ypBlue)
         }
         .background(Color.ypWhite)
     }
-    
-   
 }
 
+// MARK: - Preview
 #Preview {
-    VStack {
+    VStack(spacing: 16) {
         FilterRowView(title: "Утро 06:00 - 12:00", isSelected: true, selectionType: .checkbox)
         FilterRowView(title: "Да", isSelected: false, selectionType: .radio)
     }

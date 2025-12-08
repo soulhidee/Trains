@@ -1,7 +1,9 @@
 import Foundation
 
-struct FilterSection: Identifiable {
+// MARK: - FilterSection
+struct FilterSection: Identifiable, Sendable {
     let id: String
     let title: String
     let items: [FilterItem]
+    let itemTypes: [FilterItemType]
 }

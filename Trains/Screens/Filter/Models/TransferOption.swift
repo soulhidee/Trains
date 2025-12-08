@@ -1,6 +1,7 @@
 import Foundation
 
-enum TransferOption: CaseIterable {
+// MARK: - TransferOption
+enum TransferOption: CaseIterable, Sendable {
     case yes
     case no
     

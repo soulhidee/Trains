@@ -1,7 +1,7 @@
 import Foundation
 
 // MARK: - DepartureTime
-enum DepartureTime: String, CaseIterable {
+enum DepartureTime: String, CaseIterable, Sendable {
     case morning
     case afternoon
     case evening
