@@ -1,5 +1,4 @@
 import SwiftUI
-import OpenAPIURLSession
 
 // MARK: - CarrierInfoView
 struct CarrierInfoView: View {
@@ -12,6 +11,7 @@ struct CarrierInfoView: View {
     @State private var detailsLoaded = false
     
     private let apikey = Secrets.apiKey
+    private let api = APIClient.shared
     
     // MARK: - Body
     var body: some View {
@@ -22,8 +22,10 @@ struct CarrierInfoView: View {
         .background(.ypWhite)
         .navigationBarHidden(true)
         .toolbar(.hidden, for: .tabBar)
-        .onAppear { parseInitialContacts() }
-        .task(id: carrier.code) { await loadCarrierDetails() }
+        .task {
+            parseInitialContacts()
+            await loadCarrierDetails()
+        }
     }
     
     // MARK: - Subviews
@@ -136,19 +138,12 @@ struct CarrierInfoView: View {
     
     private func loadCarrierDetails() async {
         guard !detailsLoaded else { return }
-        guard let serverURL = URL(string: "https://api.rasp.yandex.net") else {
-            print("Invalid URL")
-            return
-        }
         guard let code = carrier.code else { return }
         
         detailsLoaded = true
         
         do {
-            let client = Client(serverURL: serverURL, transport: URLSessionTransport())
-            let service = CarrierService(client: client)
-            
-            let response = try await service.getCarrierInfo(
+            let response = try await api.getCarrierInfo(
                 apikey: apikey,
                 code: String(code),
                 system: nil,
@@ -188,9 +183,6 @@ struct CarrierInfoView: View {
         return (emailFound, phoneFound)
     }
 }
-
-// MARK: - CarrierInfoLogoView
-
 
 // MARK: - Preview
 #Preview {

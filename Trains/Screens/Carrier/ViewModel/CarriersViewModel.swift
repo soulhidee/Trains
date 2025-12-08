@@ -2,8 +2,10 @@ import Combine
 import SwiftUI
 import OpenAPIURLSession
 
+// MARK: - CarriersViewModel
 @MainActor
 class CarriersViewModel: ObservableObject {
+    // MARK: - Published Properties
     @Published var allCarriers: [Carrier] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
@@ -11,14 +13,17 @@ class CarriersViewModel: ObservableObject {
     @Published var selectedTimes: Set<DepartureTime> = []
     @Published var showTransfers: Bool?
     
+    // MARK: - Private Properties
     private let api = APIClient.shared
     private let apikey = Secrets.apiKey
     private var currentFilters: FilterOptions?
     private var onServerError: (() -> Void)?
     private var onNoInternet: (() -> Void)?
     
+    // MARK: - Initialization
     init() {}
     
+    // MARK: - Public Methods
     func setErrorCallbacks(onServerError: @escaping () -> Void, onNoInternet: @escaping () -> Void) {
         self.onServerError = onServerError
         self.onNoInternet = onNoInternet
@@ -76,6 +81,17 @@ class CarriersViewModel: ObservableObject {
         currentFilters = filters
     }
     
+    func updateFilters(times: Set<DepartureTime>, transfers: Bool?) {
+        selectedTimes = times
+        showTransfers = transfers
+        hasFilters = !times.isEmpty || transfers != nil
+        
+        currentFilters = FilterOptions(selectedTimes: times, showTransfers: transfers)
+        
+        print("DEBUG: Фильтры обновлены → время: \(times.map { $0.rawValue }), пересадки: \(transfers.map { $0 ? "да" : "нет" } ?? "nil")")
+    }
+    
+    // MARK: - Private Methods
     private func processSegments(_ segments: Segments) async {
         guard let segmentsArray = segments.segments else {
             errorMessage = "Рейсы не найдены"
@@ -107,6 +123,36 @@ class CarriersViewModel: ObservableObject {
         }
     }
     
+    private func applyFilters(_ trips: [Carrier], filters: FilterOptions) -> [Carrier] {
+        var filteredTrips = trips
+        
+        if !filters.selectedTimes.isEmpty {
+            filteredTrips = filteredTrips.filter { trip in
+                let hour = getHourFromTime(trip.departureTime)
+                return filters.selectedTimes.contains { departureTime in
+                    departureTime.range.contains(hour)
+                }
+            }
+        }
+        
+        if let showTransfers = filters.showTransfers {
+            filteredTrips = filteredTrips.filter { trip in
+                return trip.hasTransfers == showTransfers
+            }
+        }
+        
+        return filteredTrips
+    }
+    
+    private func getHourFromTime(_ timeString: String) -> Int {
+        let components = timeString.components(separatedBy: ":")
+        guard components.count >= 2,
+              let hour = Int(components[0]) else {
+            return 0
+        }
+        return hour
+    }
+    
     private func formatTime(_ isoString: String) -> String {
         let isoFormatter = ISO8601DateFormatter()
         isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -114,9 +160,7 @@ class CarriersViewModel: ObservableObject {
         guard let date =
                 isoFormatter.date(from: isoString) ??
                 ISO8601DateFormatter().date(from: isoString)
-        else {
-            return ""
-        }
+        else { return "" }
         
         let formatter = DateFormatter()
         formatter.dateFormat = "H:mm"
@@ -146,11 +190,9 @@ class CarriersViewModel: ObservableObject {
         
         if timeString.contains(" ") {
             dateComponent = timeString.components(separatedBy: " ").first ?? ""
-        }
-        else if timeString.contains("T") {
+        } else if timeString.contains("T") {
             dateComponent = timeString.components(separatedBy: "T").first ?? ""
-        }
-        else {
+        } else {
             let now = Date()
             let calendar = Calendar.current
             let day = calendar.component(.day, from: now)
@@ -199,49 +241,6 @@ class CarriersViewModel: ObservableObject {
         }
         
         return Date()
-    }
-    
-    func updateFilters(times: Set<DepartureTime>, transfers: Bool?) {
-        selectedTimes = times
-        showTransfers = transfers
-        hasFilters = !times.isEmpty || transfers != nil
-        
-        currentFilters = FilterOptions(selectedTimes: times, showTransfers: transfers)
-        
-        print("DEBUG: Фильтры обновлены → время: \(times.map { $0.rawValue }), пересадки: \(transfers.map { $0 ? "да" : "нет" } ?? "nil")")
-    }
-    
-    private func applyFilters(_ trips: [Carrier], filters: FilterOptions) -> [Carrier] {
-        var filteredTrips = trips
-        
-        if !filters.selectedTimes.isEmpty {
-            filteredTrips = filteredTrips.filter { trip in
-                let hour = getHourFromTime(trip.departureTime)
-                return filters.selectedTimes.contains { departureTime in
-                    departureTime.range.contains(hour)
-                }
-            }
-        }
-        
-        // Фильтрация по пересадкам
-        if let showTransfers = filters.showTransfers {
-            filteredTrips = filteredTrips.filter { trip in
-                // Если showTransfers == true, показываем только с пересадками
-                // Если showTransfers == false, показываем только без пересадок
-                return trip.hasTransfers == showTransfers
-            }
-        }
-        
-        return filteredTrips
-    }
-    
-    private func getHourFromTime(_ timeString: String) -> Int {
-        let components = timeString.components(separatedBy: ":")
-        guard components.count >= 2,
-              let hour = Int(components[0]) else {
-            return 0
-        }
-        return hour
     }
     
     private func createTripInfo(from segment: Components.Schemas.Segment, hasTransfers: Bool) -> Carrier? {
@@ -334,6 +333,7 @@ class CarriersViewModel: ObservableObject {
     }
 }
 
+// MARK: - Array safe subscript
 extension Array {
     subscript(safe index: Int) -> Element? {
         return indices.contains(index) ? self[index] : nil
